@@ -7,4 +7,7 @@ public interface PlayAreaInterface {
 	int getRows();
 	void setFeld(Feld[][] zusatzfeld);
 	Feld[][] getFeld();
+	String getName();
+	void setName(String name);
+	void replacePlayArea(Feld[][] feld, String name, int columns, int rows);
 }

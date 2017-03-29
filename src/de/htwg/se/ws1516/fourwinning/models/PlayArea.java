@@ -9,12 +9,14 @@ public class PlayArea implements PlayAreaInterface
     int setY = 0;
     private int columns;
     private int rows;
+    String name;
 
     //Konstruktor
     public PlayArea(int rows, int columns){
         feld = new Feld[rows][columns];
         this.columns = columns;
         this.rows = rows;
+        name = "default";
         buildArea(rows,columns);
     }
 
@@ -76,5 +78,23 @@ public class PlayArea implements PlayAreaInterface
     public void setFeld(Feld[][] zusatzfeld){
     	this.feld = zusatzfeld;
     }
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public void replacePlayArea(Feld[][] feld, String name, int columns, int rows) {
+		this.feld = feld;
+		this.name = name;
+		this.columns = columns;
+		this.rows = rows;
+	}
     
 }

@@ -31,4 +31,8 @@ public interface IGameController extends IObservable{
 	void setColumns(int columns);
 	void setState(IGameState state);
 	IGameState getState();
+	boolean loadFromDB(String name);
+	public void saveToDB();
+	public void deleteFromDB();
+	public String getAllGridsFromDB();
 }

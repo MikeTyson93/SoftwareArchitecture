@@ -1,8 +1,11 @@
 package de.htwg.se.ws1516.fourwinning.controller.impl;
 
 import de.htwg.se.ws1516.fourwinning.models.*;
+import de.htwg.se.ws1516.fourwinning.persistence.PlayAreaInterfaceDAO;
 import de.htwg.util.*;
 import de.htwg.util.observer.Observable;
+
+import java.util.List;
 
 import com.google.inject.Inject;
 
@@ -27,12 +30,13 @@ public class GameController extends Observable implements IGameController {
 	boolean spielGewonnen;
 	CreateCommand commands;
 	private IGameState state;
+	private PlayAreaInterfaceDAO dbInterface;
 	
 	
 	@Inject
-	public GameController(IPlayerAreaFactory playfactory) {
+	public GameController(IPlayerAreaFactory playfactory, PlayAreaInterfaceDAO dbInterface) {
 		this.gridfactory = playfactory;
-
+		this.dbInterface = dbInterface;
 	}
 	
 	@Override
@@ -234,5 +238,38 @@ public class GameController extends Observable implements IGameController {
 		return state;
 	}
 	
+	// Database interactions######################
+	// This methods checks if grid is available by name.
+	// If not, return false else return true and replace the current gtid with the grid from the db
+	@Override
+	public boolean loadFromDB(String name) {
+		if (!dbInterface.containsPlayAreaByName(name))
+			return false;
+		PlayAreaInterface grid = dbInterface.getPlayArea(name);
+		this.grid = grid;
+		grid.replacePlayArea(grid.getFeld(), grid.getName(), grid.getColumns(), grid.getRows());
+		notifyObservers();
+		return true;
+	}
+
+	@Override
+	public void saveToDB(){
+		dbInterface.savePlayArea(grid);
+	}
 	
+	@Override
+	public void deleteFromDB(){
+		dbInterface.deletePlayArea(grid);
+	}
+	
+	@Override
+	public String getAllGridsFromDB(){
+		List<PlayAreaInterface> areas = dbInterface.getAllPlayAreas();
+		StringBuilder sb = new StringBuilder();
+		for (PlayAreaInterface area: areas){
+			sb.append(area.getName());
+			sb.append("\t");
+		}
+		return sb.toString();
+	}
 }
