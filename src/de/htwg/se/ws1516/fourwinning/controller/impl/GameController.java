@@ -267,7 +267,9 @@ public class GameController extends Observable implements IGameController {
 		List<PlayAreaInterface> areas = dbInterface.getAllPlayAreas();
 		StringBuilder sb = new StringBuilder();
 		for (PlayAreaInterface area: areas){
+			sb.append("'");
 			sb.append(area.getName());
+			sb.append("'");
 			sb.append("\t");
 		}
 		return sb.toString();
