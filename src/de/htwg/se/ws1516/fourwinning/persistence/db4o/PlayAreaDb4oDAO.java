@@ -21,7 +21,13 @@ public class PlayAreaDb4oDAO implements PlayAreaInterfaceDAO{
 
 	@Override
 	public void savePlayArea(final PlayAreaInterface PlayArea) {
-		database.store(PlayArea);
+		try{
+			database.store(PlayArea);
+			database.commit();
+		} catch (Exception e){
+			// Unhandled Exception
+			database.rollback();
+		}
 	}
 
 	@Override
@@ -32,7 +38,13 @@ public class PlayAreaDb4oDAO implements PlayAreaInterfaceDAO{
 
 	@Override
 	public void deletePlayArea(final PlayAreaInterface PlayArea) {
-		database.delete(PlayArea);
+		try{
+			database.delete(PlayArea);
+			database.commit();
+		} catch (Exception e){
+			// Unhandled Exception
+			database.rollback();
+		}
 	}
 
 
