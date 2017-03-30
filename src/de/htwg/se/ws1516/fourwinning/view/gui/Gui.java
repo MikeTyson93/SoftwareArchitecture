@@ -6,6 +6,7 @@ import de.htwg.se.ws1516.fourwinning.controller.IGameController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import de.htwg.se.ws1516.fourwinning.controller.impl.GameDrawEvent;
+import de.htwg.se.ws1516.fourwinning.controller.impl.GameLoadEvent;
 import de.htwg.se.ws1516.fourwinning.controller.impl.GameOverEvent;
 import de.htwg.se.ws1516.fourwinning.models.Feld;
 import de.htwg.se.ws1516.fourwinning.models.Player;
@@ -216,6 +217,9 @@ public class Gui extends JFrame implements ActionListener, IObserver {
 			JOptionPane.showMessageDialog(null, "Game Draw!", "",
 					JOptionPane.ERROR_MESSAGE);
 			Runtime.getRuntime().halt(0);
+		} else if (e instanceof GameLoadEvent){
+			this.spielfeld = spiel.update();
+			ausgabe(rows, columns, eins, zwei);
 		}
 	}
 	

@@ -32,7 +32,7 @@ public interface IGameController extends IObservable{
 	void setState(IGameState state);
 	IGameState getState();
 	boolean loadFromDB(String name);
-	public void saveToDB();
+	public boolean saveToDB(String name);
 	public void deleteFromDB();
 	public String getAllGridsFromDB();
 }

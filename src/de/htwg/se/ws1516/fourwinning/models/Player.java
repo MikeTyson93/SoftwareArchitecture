@@ -6,9 +6,12 @@ public class Player implements PlayerInterface
     int menge;
     boolean active;
     boolean gewonnen = false;
+    String sessionName;
+    
     public Player(String name, int menge){
         this.name = name;
         this.menge = menge;
+        this.sessionName = "default";
     }
     
     @Override

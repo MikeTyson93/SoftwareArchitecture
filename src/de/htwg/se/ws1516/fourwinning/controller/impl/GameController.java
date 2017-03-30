@@ -240,21 +240,31 @@ public class GameController extends Observable implements IGameController {
 	
 	// Database interactions######################
 	// This methods checks if grid is available by name.
-	// If not, return false else return true and replace the current gtid with the grid from the db
+	// If not, return false else return true and replace the current grid with the grid from the db
 	@Override
 	public boolean loadFromDB(String name) {
 		if (!dbInterface.containsPlayAreaByName(name))
 			return false;
-		PlayAreaInterface grid = dbInterface.getPlayArea(name);
-		this.grid = grid;
-		grid.replacePlayArea(grid.getFeld(), grid.getName(), grid.getColumns(), grid.getRows());
-		notifyObservers();
+		PlayAreaInterface gridCopy = dbInterface.getPlayArea(name);
+		
+		this.grid = gridCopy;
+		this.one = gridCopy.getPlayer(0);
+		this.two = gridCopy.getPlayer(1);
+		grid.replacePlayArea(gridCopy.getFeld(), gridCopy.getName(), gridCopy.getColumns(), gridCopy.getRows());
+		notifyObservers(new GameLoadEvent());
 		return true;
 	}
 
 	@Override
-	public void saveToDB(){
+	public boolean saveToDB(String name){
+		// First save the game field
+		if (dbInterface.containsPlayAreaByName(name))
+			return false;
+		grid.setName(name);
+		grid.setPlayers(one, two);
 		dbInterface.savePlayArea(grid);
+		// Now save the active player (which one continues?)
+		return true;
 	}
 	
 	@Override
@@ -266,11 +276,14 @@ public class GameController extends Observable implements IGameController {
 	public String getAllGridsFromDB(){
 		List<PlayAreaInterface> areas = dbInterface.getAllPlayAreas();
 		StringBuilder sb = new StringBuilder();
+		int idx = 1;
 		for (PlayAreaInterface area: areas){
+			sb.append("\n");
 			sb.append("'");
-			sb.append(area.getName());
+			sb.append("Spielstand " + idx + ": \t" + area.getName());
 			sb.append("'");
-			sb.append("\t");
+			sb.append("\n");
+			idx++;
 		}
 		return sb.toString();
 	}

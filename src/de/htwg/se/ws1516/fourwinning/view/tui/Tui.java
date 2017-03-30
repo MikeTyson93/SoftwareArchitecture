@@ -62,7 +62,6 @@ public class Tui implements IObserver {
 	}
 
 	public void createGameArea() {
-		//eingabe = new Scanner(System.in);
 		LOGGER.info("Rows werden von GUI übernommen");
 		rows = spiel.getRows();
 		LOGGER.info("Columns werden von GUI übernommen");
@@ -86,7 +85,10 @@ public class Tui implements IObserver {
 				columns - 1);
 		LOGGER.info(rowExplain);
 
-		LOGGER.info("Um den letzten Zug zu widerholen, geben sie redo ein");
+		//LOGGER.info("Um den letzten Zug zu widerholen, geben sie redo ein");
+		LOGGER.info("Um einen alten Spielstand zu laden, geben Sie 'load #Savegame' ein");
+		LOGGER.info("Um ein Spiel zu speichern, geben sie 'save #savegame' ein");
+		LOGGER.info("Um alle Spielstände anzuschauen, geben sie 'show' ein");
 		String currentColumnString;
 		if (command == ""){
 			currentColumnString = eingabe.next();
@@ -96,6 +98,34 @@ public class Tui implements IObserver {
 		if ("redo".equals(currentColumnString)) {
 			spiel.redo();
 			spielerwaechsel(eins, zwei);
+		} else if (currentColumnString.startsWith("load")){
+			// Load savegame
+			LOGGER.info("Nun müssen sie noch den Namen des Spielstandes eingeben, welchen Sie laden wollen.");
+			String loadname = eingabe.next();
+
+			boolean success = spiel.loadFromDB(loadname);
+			if (!success)
+				LOGGER.info("Sie haben einen ungültigen Spielnamen angegeben!");
+			this.eins = spiel.getPlayerOne();
+			this.zwei = spiel.getPlayerTwo();
+			this.aktiv = spiel.aktiverSpieler();
+			return "load";
+		} else if (currentColumnString.startsWith("save")){
+			boolean validName = false;
+			// save game
+			LOGGER.info("Nun müssen sie noch den Namen des Spielstandes eingeben, welchen Sie speichern wollen.");
+			while (!validName){
+				String savegame = eingabe.next();
+				if (!spiel.saveToDB(savegame)){
+					LOGGER.info("Sie haben einen schon belegten Namen angegeben.");
+					continue;
+				}
+				validName = true;
+			}
+			return "save";
+		} else if (currentColumnString.startsWith("show")){
+			LOGGER.info(spiel.getAllGridsFromDB());
+			return "show";
 		} else {
 			spielfeld = spiel.update();
 			int currentColumn = Integer.parseInt(currentColumnString);
@@ -108,24 +138,24 @@ public class Tui implements IObserver {
 			
 			return "";
 		}
-		LOGGER.info(spiel.getStatusText());
+		//LOGGER.info(spiel.getStatusText());
 		LOGGER.info(whoHasWon);
 		
 		if (spiel.spielDraw(spielfeld)) {
 			
 			return "";
 		}
-		LOGGER.info(spiel.getStatusText());
-		LOGGER.info("");
-		LOGGER.info("%n%n Schreibe undo, um den Zug rueckgaengig zu machen, ansonsten beliebige taste %n%n");
-		if(command == ""){
+		//LOGGER.info(spiel.getStatusText());
+		//LOGGER.info("");
+		//LOGGER.info("%n%n Schreibe undo, um den Zug rueckgaengig zu machen, ansonsten beliebige taste %n%n");
+		/*if(command == ""){
 			String undo = eingabe.next();
 			if ("undo".equals(undo)) {
 				spiel.undo();
 				spielfeld = spiel.update();
 				return next;
 			}
-		}
+		}*/
 		spiel.notifyObservers(new PlayerChangeEvent());
 		return next;
 	}
@@ -143,8 +173,10 @@ public class Tui implements IObserver {
 		} else if (spiel.getState() instanceof GameRunningState) {
 			spiel.getState().nextState(spiel);
 			String rueck = playGame("");
-			spielerwaechsel(eins, zwei);
-			return rueck;
+			if (rueck == next)
+				spielerwaechsel(eins, zwei);
+			if (rueck == next || rueck == "show" || rueck == "load" || rueck == "save")
+				return next;
 		} else if (spiel.getState() instanceof PlayerChangeState) {
 			spiel.getState().nextState(spiel);
 			return next;
@@ -162,8 +194,10 @@ public class Tui implements IObserver {
         if(spiel.getState() instanceof GameRunningState)
         {
             String rueck = playGame(command);
-            spielerwaechsel(eins, zwei);
-            return rueck;
+            if (rueck == next);
+            	spielerwaechsel(eins, zwei);
+            if (rueck == next)
+            	return next;
         }
         return null;
 	}
@@ -181,6 +215,9 @@ public class Tui implements IObserver {
 		} else if (e instanceof GameDrawEvent){
 			String gameDraw = "Draw";
 			LOGGER.info(gameDraw);
+		} else if (e instanceof GameLoadEvent){
+			this.spielfeld = spiel.update();
+			ausgabe(spielfeld, rows, columns, eins, zwei);
 		}
 	}
 	

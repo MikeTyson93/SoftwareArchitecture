@@ -18,6 +18,18 @@ public class Feld implements FeldInterface
     	return x;
     }
     
+    public void setX(int x){
+    	this.x = x;
+    }
+    
+    public void setY(int y){
+    	this.y = y;
+    }
+    
+    public void setSet(boolean set){
+    	this.isSet = set;
+    }
+    
     public int getY(){
     	return y;
     }
@@ -35,6 +47,10 @@ public class Feld implements FeldInterface
     @Override
     public void setOwner(Player owner){
         this.owner = owner;
+        if (owner == null){
+        	isSet = false;
+        	return;
+        }
         isSet = true;
     }
 }

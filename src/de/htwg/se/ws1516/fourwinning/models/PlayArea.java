@@ -1,15 +1,17 @@
 package de.htwg.se.ws1516.fourwinning.models;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import de.htwg.se.ws1516.fourwinning.models.Feld;
 
 public class PlayArea implements PlayAreaInterface
 {
     private Feld[][] feld;
-    int setX = 0;
-    int setY = 0;
     private int columns;
     private int rows;
     String name;
+    List<Player> playerlist;
 
     //Konstruktor
     public PlayArea(int rows, int columns){
@@ -17,6 +19,8 @@ public class PlayArea implements PlayAreaInterface
         this.columns = columns;
         this.rows = rows;
         name = "default";
+        // 1 to many relationship
+        playerlist = new LinkedList<>();
         buildArea(rows,columns);
     }
 
@@ -90,11 +94,35 @@ public class PlayArea implements PlayAreaInterface
 	}
 
 	@Override
-	public void replacePlayArea(Feld[][] feld, String name, int columns, int rows) {
-		this.feld = feld;
+	public void replacePlayArea(Feld[][] feldcopy, String name, int columns, int rows) {
+		for (int i = 0; i < rows; i++){
+			for (int j = 0; j < columns; j++){
+				feld[i][j].setX(feldcopy[i][j].getX());
+				feld[i][j].setY(feldcopy[i][j].getY());
+				feld[i][j].setSet(feldcopy[i][j].getSet());
+				feld[i][j].setOwner(feldcopy[i][j].getOwner());
+			}
+		}
 		this.name = name;
 		this.columns = columns;
 		this.rows = rows;
 	}
-    
+	
+	@Override
+	public void setPlayers(Player one, Player two){
+		playerlist.add(one);
+		playerlist.add(two);
+	}
+	
+	@Override
+	public void clearPlayers(){
+		playerlist.clear();
+		
+	}
+	    
+	@Override
+	public Player getPlayer(int idx){
+		return playerlist.get(idx);
+	
+	}
 }

@@ -7,6 +7,7 @@ import com.db4o.ObjectContainer;
 import com.db4o.query.Predicate;
 
 import de.htwg.se.ws1516.fourwinning.models.PlayAreaInterface;
+import de.htwg.se.ws1516.fourwinning.models.Player;
 import de.htwg.se.ws1516.fourwinning.persistence.PlayAreaInterfaceDAO;
 
 public class PlayAreaDb4oDAO implements PlayAreaInterfaceDAO{
@@ -24,6 +25,7 @@ public class PlayAreaDb4oDAO implements PlayAreaInterfaceDAO{
 		try{
 			database.store(PlayArea);
 			database.commit();
+			database.rollback();
 		} catch (Exception e){
 			// Unhandled Exception
 			database.rollback();
@@ -80,6 +82,7 @@ public class PlayAreaDb4oDAO implements PlayAreaInterfaceDAO{
 		});
 
 		if (playareas.size() > 0) {
+			database.rollback();
 			return playareas.get(0);
 		}
 		return null;
