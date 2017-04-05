@@ -7,7 +7,7 @@ import de.htwg.se.ws1516.fourwinning.models.PlayAreaInterface;
 public interface PlayAreaInterfaceDAO {
 	void savePlayArea(PlayAreaInterface PlayArea);
 	List<PlayAreaInterface> getAllPlayAreas();
-	void deletePlayArea(PlayAreaInterface PlayArea);
+	boolean deletePlayArea(final String name);
 	boolean containsPlayAreaByName(String name);
 	PlayAreaInterface getPlayArea(String name);
 }

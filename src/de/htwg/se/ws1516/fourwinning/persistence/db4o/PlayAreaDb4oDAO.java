@@ -39,14 +39,19 @@ public class PlayAreaDb4oDAO implements PlayAreaInterfaceDAO{
 
 
 	@Override
-	public void deletePlayArea(final PlayAreaInterface PlayArea) {
+	public boolean deletePlayArea(final String name) {
 		try{
+			if (!containsPlayAreaByName(name))
+				return false;
+			PlayAreaInterface PlayArea = getPlayArea(name);
 			database.delete(PlayArea);
 			database.commit();
 		} catch (Exception e){
 			// Unhandled Exception
 			database.rollback();
+			return false;
 		}
+		return true;
 	}
 
 

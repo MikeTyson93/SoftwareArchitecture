@@ -33,6 +33,8 @@ public interface IGameController extends IObservable{
 	IGameState getState();
 	boolean loadFromDB(String name);
 	public boolean saveToDB(String name);
-	public void deleteFromDB();
+	public boolean deleteFromDB(String name);
 	public String getAllGridsFromDB();
+	public String[] AllGridNames();
+	public boolean updateToDB(String name);
 }

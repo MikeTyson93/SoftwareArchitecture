@@ -27,6 +27,7 @@ public class Tui implements IObserver {
 	int columns = 0;
 	String zugerfolgreich;
 	String next = "next round";
+	String regex = "[0-9]+";
 	
 	@Inject
 	public Tui(IGameController spiel) {
@@ -89,9 +90,10 @@ public class Tui implements IObserver {
 		LOGGER.info("Um einen alten Spielstand zu laden, geben Sie 'load #Savegame' ein");
 		LOGGER.info("Um ein Spiel zu speichern, geben sie 'save #savegame' ein");
 		LOGGER.info("Um alle Spielstände anzuschauen, geben sie 'show' ein");
+		LOGGER.info("Um einen Spielstand zu löschen, geben Sie 'delete #savegame' ein");
 		String currentColumnString;
 		if (command == ""){
-			currentColumnString = eingabe.next();
+			currentColumnString = eingabe.nextLine();
 		} else{
 			currentColumnString = command;
 		}
@@ -101,37 +103,59 @@ public class Tui implements IObserver {
 		} else if (currentColumnString.startsWith("load")){
 			// Load savegame
 			LOGGER.info("Nun müssen sie noch den Namen des Spielstandes eingeben, welchen Sie laden wollen.");
-			String loadname = eingabe.next();
+			String loadname = eingabe.nextLine();
 
 			boolean success = spiel.loadFromDB(loadname);
-			if (!success)
+			if (!success){
 				LOGGER.info("Sie haben einen ungültigen Spielnamen angegeben!");
+				return "load";
+			}
 			this.eins = spiel.getPlayerOne();
 			this.zwei = spiel.getPlayerTwo();
 			this.aktiv = spiel.aktiverSpieler();
 			return "load";
 		} else if (currentColumnString.startsWith("save")){
-			boolean validName = false;
 			// save game
 			LOGGER.info("Nun müssen sie noch den Namen des Spielstandes eingeben, welchen Sie speichern wollen.");
-			while (!validName){
-				String savegame = eingabe.next();
-				if (!spiel.saveToDB(savegame)){
-					LOGGER.info("Sie haben einen schon belegten Namen angegeben.");
-					continue;
+			String savegame = eingabe.nextLine();
+			if (!spiel.saveToDB(savegame)){
+				LOGGER.info("Sie haben einen schon belegten Namen angegeben. Wollen Sie den Spielstand überschreiben? y/n");
+				String yesNo = eingabe.nextLine();
+				while (yesNo != "y" && yesNo != "n"){
+					LOGGER.info("Falsche Eingabe. Spielstand überschreiben? y/n");
+					yesNo = eingabe.nextLine();
 				}
-				validName = true;
+				if (yesNo == "y"){
+					spiel.updateToDB(savegame);
+				} else {
+					LOGGER.info("Vorgang abgebrochen.");
+					return "save";
+				}
 			}
+			
 			return "save";
 		} else if (currentColumnString.startsWith("show")){
 			LOGGER.info(spiel.getAllGridsFromDB());
 			return "show";
-		} else {
+		} else if (currentColumnString.startsWith("delete")){
+			LOGGER.info("Nun müssen sie noch den Namen des Spielstandes eingeben, welchen Sie löschen wollen.");
+			String deleteGame = eingabe.nextLine();
+			if (!spiel.deleteFromDB(deleteGame)){
+				LOGGER.info("Spielstand konnte nicht gelöscht werden.");
+				return "delete";
+			}
+			LOGGER.info("Spielstand gelöscht.");
+			return "delete";
+		} else if (currentColumnString.matches(regex)){
 			spielfeld = spiel.update();
 			int currentColumn = Integer.parseInt(currentColumnString);
 			zugerfolgreich = (spiel.zug(currentColumn, aktiv));
 			LOGGER.info(zugerfolgreich);
+		} else {
+			LOGGER.warning("Ungültige Eingabe!");
+			return "show";
 		}
+		
 		spiel.notifyObservers();
 		String whoHasWon = "";
 		if (spiel.spielGewonnen(spielfeld, aktiv)) {
@@ -175,7 +199,7 @@ public class Tui implements IObserver {
 			String rueck = playGame("");
 			if (rueck == next)
 				spielerwaechsel(eins, zwei);
-			if (rueck == next || rueck == "show" || rueck == "load" || rueck == "save")
+			if (rueck == next || rueck == "show" || rueck == "load" || rueck == "save" || rueck == "delete")
 				return next;
 		} else if (spiel.getState() instanceof PlayerChangeState) {
 			spiel.getState().nextState(spiel);

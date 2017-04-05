@@ -5,6 +5,7 @@ import de.htwg.se.ws1516.fourwinning.persistence.PlayAreaInterfaceDAO;
 import de.htwg.util.*;
 import de.htwg.util.observer.Observable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.inject.Inject;
@@ -268,8 +269,16 @@ public class GameController extends Observable implements IGameController {
 	}
 	
 	@Override
-	public void deleteFromDB(){
-		dbInterface.deletePlayArea(grid);
+	public boolean updateToDB(String name){
+		grid.setName(name);
+		grid.setPlayers(one, two);
+		dbInterface.savePlayArea(grid);
+		return true;
+	}
+	
+	@Override
+	public boolean deleteFromDB(String name){
+		return dbInterface.deletePlayArea(name);
 	}
 	
 	@Override
@@ -280,11 +289,25 @@ public class GameController extends Observable implements IGameController {
 		for (PlayAreaInterface area: areas){
 			sb.append("\n");
 			sb.append("'");
-			sb.append("Spielstand " + idx + ": \t" + area.getName());
+			sb.append("Spielstand " + idx + ": \t'" + area.getName() + "'");
 			sb.append("'");
 			sb.append("\n");
 			idx++;
 		}
 		return sb.toString();
+	}
+	
+	@Override
+	public String[] AllGridNames(){
+		List<String> all = new ArrayList<>();
+		
+		int idx = 0;
+		List<PlayAreaInterface> areas = dbInterface.getAllPlayAreas();
+		String[] retval = new String[areas.size()];
+		for (PlayAreaInterface area: areas){
+			all.add("Spielstand " + idx + ": \t" + area.getName());
+			idx++;
+		}
+		return all.toArray(retval);
 	}
 }

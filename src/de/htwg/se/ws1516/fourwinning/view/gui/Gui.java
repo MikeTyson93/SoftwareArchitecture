@@ -12,6 +12,7 @@ import de.htwg.se.ws1516.fourwinning.models.Feld;
 import de.htwg.se.ws1516.fourwinning.models.Player;
 import de.htwg.util.observer.Event;
 import de.htwg.util.observer.IObserver;
+import de.htwg.se.ws1516.fourwinning.view.gui.SavegamePanel;
 
 
 import javax.swing.*;
@@ -37,6 +38,8 @@ public class Gui extends JFrame implements ActionListener, IObserver {
 	JMenu info;
 	JMenuItem autor;
 	JMenuItem newGame;
+	JMenuItem ManageSaveGame;
+	JMenuItem ManageLoadGame;
 	JMenu zug;
 	JMenuItem zugUndo;
 	JMenuItem zugRedo;
@@ -69,11 +72,17 @@ public class Gui extends JFrame implements ActionListener, IObserver {
 			close.addActionListener(this);
 			newGame = new JMenuItem("Neues Spiel");
 			newGame.addActionListener(this);
+			ManageSaveGame = new JMenuItem("Spielstand speichern");
+			ManageLoadGame = new JMenuItem("Spielstand laden");
+			ManageSaveGame.addActionListener(this);
+			ManageLoadGame.addActionListener(this);
 			datei.add(newGame);
+			datei.add(ManageSaveGame);
+			datei.add(ManageLoadGame);
 			datei.add(close);
 			zug = new JMenu("Zug");
 			menueBar.add(zug);
-			zugUndo = new JMenuItem("Zug rÃ¼ckgÃ¤ngig machen");
+			zugUndo = new JMenuItem("Zug rückgängig machen");
 			zugUndo.addActionListener(this);
 			zug.add(zugUndo);
 			zugRedo = new JMenuItem("Zug wiederholen");
@@ -126,7 +135,7 @@ public class Gui extends JFrame implements ActionListener, IObserver {
 
 			setVisible(true);
 		} catch (Exception x) {
-			JOptionPane.showMessageDialog(null, "UngÃ¼ltige Spielparameter eingegeben", "Fehler",
+			JOptionPane.showMessageDialog(null, "Ungültige Spielparameter eingegeben", "Fehler",
 					JOptionPane.ERROR_MESSAGE);
 			LOGGER.log(Level.SEVERE,fehler, x);
 			return;
@@ -166,7 +175,33 @@ public class Gui extends JFrame implements ActionListener, IObserver {
 			ausgabe(rows, columns, eins, zwei);
 			return;
 		}
-
+		
+		if (quelle == ManageSaveGame){
+			SavegamePanel.buildPanel(spiel.AllGridNames(), this.spiel);
+		}
+			
+		if (quelle == ManageLoadGame){
+			boolean validName = false;
+			String loadGame = (String)JOptionPane.showInputDialog(null, "Spielstand laden", "Spielstand laden",
+					JOptionPane.QUESTION_MESSAGE, null, spiel.AllGridNames() , null);
+			loadGame = loadGame.split("\t")[1];
+			boolean success = spiel.loadFromDB(loadGame);
+			this.eins = spiel.getPlayerOne();
+			this.zwei = spiel.getPlayerTwo();
+			this.aktiv = spiel.aktiverSpieler();
+		}
+			/*
+			while (!validName){
+				String savegame = JOptionPane.showInputDialog("Name des Speicherstandes angeben.");
+				if (!spiel.saveToDB(savegame)){
+					
+					continue;
+				}
+				validName = true;
+			}
+			return;
+		}*/
+		
 		if (quelle == close) {
 			Runtime.getRuntime().halt(0);
 		}
