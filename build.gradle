@@ -8,7 +8,7 @@ repositories {
 
 apply plugin: "java"
 apply plugin: "idea"
-apply plugin: "sonar-runner"
+//apply plugin: "sonar-runner"
 apply plugin: "org.sonarqube"
 apply plugin: "eclipse"
 apply plugin: "maven"
@@ -23,8 +23,12 @@ idea {
 }
 
 dependencies {
+    compile fileTree(dir: 'lib', include: ['*.jar'])
 	compile group: 'com.google.inject',        name: 'guice',      version: '3.0'
+    compile group: 'org.ektorp', name: 'org.ektorp', version: '1.4.1'
+    compile files('lib/db4o-8.0.276.16149-all-java5.jar')
     testCompile "junit:junit:4.11"
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.6'
 }
 
 sourceSets {
