@@ -1,5 +1,7 @@
 package de.htwg.se.ws1516.fourwinning.models;
 
+import java.util.List;
+
 public interface PlayAreaInterface {
 	void buildArea(int rows, int columns);
 	int setChip(int column, Player p);
@@ -13,4 +15,5 @@ public interface PlayAreaInterface {
 	public void setPlayers(Player one, Player two);
 	Player getPlayer(int idx);
 	void clearPlayers();
+	List<Player> getPlayerList();
 }

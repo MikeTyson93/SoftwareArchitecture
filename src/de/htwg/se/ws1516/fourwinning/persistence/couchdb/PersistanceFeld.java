@@ -19,7 +19,7 @@ public class PersistanceFeld extends CouchDbDocument {
     	this.y = y;
     }
     
-    public void setIsSet(boolean isSet){
+    public void setSet(boolean isSet){
     	this.isSet = isSet;
     }
     

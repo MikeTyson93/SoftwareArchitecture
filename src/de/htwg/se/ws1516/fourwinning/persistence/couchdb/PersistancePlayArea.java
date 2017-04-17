@@ -16,7 +16,7 @@ public class PersistancePlayArea extends CouchDbDocument {
 	
 	@TypeDiscriminator
 	public String id;
-	private Feld[][] feld;
+	private PersistanceFeld[][] feld;
     private int columns;
     private int rows;
     List<Player> playerlist;
@@ -25,11 +25,18 @@ public class PersistancePlayArea extends CouchDbDocument {
     public PersistancePlayArea(){
     }
     
-    public void setFeld(Feld[][] feld){
-    	this.feld = feld;
+    public void setFeld(PersistanceFeld[][] feld){
+    	for (int i = 0; i < rows; i++){
+			for (int j = 0; j < columns; j++){
+				feld[i][j].setX(feld[i][j].getX());
+				feld[i][j].setY(feld[i][j].getY());
+				feld[i][j].setSet(feld[i][j].getSet());
+				feld[i][j].setOwner(feld[i][j].getOwner());
+			}
+		}
     }
     
-    public Feld[][] getFeld(){
+    public PersistanceFeld[][] getFeld(){
     	return this.feld;
     }
     
@@ -64,4 +71,18 @@ public class PersistancePlayArea extends CouchDbDocument {
     public String getName(){
     	return this.name;
     }
+    
+    public void replacePlayArea(Feld[][] feldcopy, String name, int columns, int rows) {
+		for (int i = 0; i < rows; i++){
+			for (int j = 0; j < columns; j++){
+				feld[i][j].setX(feldcopy[i][j].getX());
+				feld[i][j].setY(feldcopy[i][j].getY());
+				feld[i][j].setSet(feldcopy[i][j].getSet());
+				feld[i][j].setOwner(feldcopy[i][j].getOwner());
+			}
+		}
+		this.name = name;
+		this.columns = columns;
+		this.rows = rows;
+	}
 }

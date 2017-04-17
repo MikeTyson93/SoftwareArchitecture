@@ -125,4 +125,9 @@ public class PlayArea implements PlayAreaInterface
 		return playerlist.get(idx);
 	
 	}
+	
+	@Override
+	public List<Player> getPlayerList(){
+		return playerlist;
+	}
 }
