@@ -9,6 +9,11 @@ import de.htwg.se.ws1516.fourwinning.models.Feld;
 import de.htwg.se.ws1516.fourwinning.models.Player;
 
 public class PersistancePlayArea extends CouchDbDocument {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	@TypeDiscriminator
 	public String id;
 	private Feld[][] feld;

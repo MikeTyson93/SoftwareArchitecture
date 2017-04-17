@@ -1,5 +1,6 @@
 package de.htwg.se.ws1516.fourwinning.persistence.couchdb;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 import org.ektorp.CouchDbConnector;
@@ -17,6 +18,8 @@ import de.htwg.se.ws1516.fourwinning.persistence.PlayAreaInterfaceDAO;
 
 public class PlayAreaCouchDBDAO implements PlayAreaInterfaceDAO{
 
+	private CouchDbConnector db = null;
+	
 	public PlayAreaCouchDBDAO(){
 		HttpClient client = null;
 		try {
