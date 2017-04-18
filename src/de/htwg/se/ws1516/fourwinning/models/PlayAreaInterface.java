@@ -1,6 +1,7 @@
 package de.htwg.se.ws1516.fourwinning.models;
 
 import java.util.List;
+import java.util.LinkedList;
 
 public interface PlayAreaInterface {
 	void buildArea(int rows, int columns);
@@ -15,5 +16,7 @@ public interface PlayAreaInterface {
 	public void setPlayers(Player one, Player two);
 	Player getPlayer(int idx);
 	void clearPlayers();
-	List<Player> getPlayerList();
+	LinkedList<Player> getPlayerList();
+	String getId();
+	void setId(String id);
 }

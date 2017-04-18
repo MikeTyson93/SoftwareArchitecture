@@ -11,7 +11,8 @@ public class PlayArea implements PlayAreaInterface
     private int columns;
     private int rows;
     String name;
-    List<Player> playerlist;
+    LinkedList<Player> playerlist;
+    private String id;
 
     //Konstruktor
     public PlayArea(int rows, int columns){
@@ -90,7 +91,7 @@ public class PlayArea implements PlayAreaInterface
 
 	@Override
 	public void setName(String name) {
-		this.name = name;
+        this.name = name;
 	}
 
 	@Override
@@ -127,7 +128,17 @@ public class PlayArea implements PlayAreaInterface
 	}
 	
 	@Override
-	public List<Player> getPlayerList(){
+	public LinkedList<Player> getPlayerList(){
 		return playerlist;
 	}
+
+    @Override
+	public String getId(){
+	    return this.id;
+    }
+
+    @Override
+    public void setId(String id){
+	    this.id = id;
+    }
 }
