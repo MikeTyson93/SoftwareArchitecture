@@ -110,10 +110,19 @@ public class PlayArea implements PlayAreaInterface
 	}
 	
 	@Override
-	public void setPlayers(Player one, Player two){
-		playerlist.add(one);
-		playerlist.add(two);
-	}
+	public void setPlayers(Player one, Player two) {
+        if (playerlist.contains(one)) {
+            playerlist.remove(playerlist.indexOf(one));
+            playerlist.add(one);
+        }
+        if (playerlist.contains(two)) {
+            playerlist.remove(playerlist.indexOf(two));
+            playerlist.add(two);
+        } else if (!playerlist.contains(one) && !playerlist.contains(two)) {
+            playerlist.add(one);
+            playerlist.add(two);
+        }
+    }
 	
 	@Override
 	public void clearPlayers(){

@@ -34,13 +34,15 @@ public class PlayAreaCouchDBDAO implements PlayAreaInterfaceDAO{
 		CouchDbInstance dbInstance = new StdCouchDbInstance(client);
 		db = dbInstance.createConnector("connect_four_db", true);
 	}
-	
+
 	@Override
 	public void savePlayArea(PlayAreaInterface PlayArea) {
 		if (containsPlayAreaByName(PlayArea.getName())){
-			db.update(copyPlayArea(PlayArea));
+			PersistancePlayArea pArea = db.find(PersistancePlayArea.class, PlayArea.getName());
+			pArea = copyPlayArea(PlayArea, true);
+			db.update(pArea);
 		} else {
-			db.create(PlayArea.getName(), copyPlayArea(PlayArea));
+			db.create(PlayArea.getName(), copyPlayArea(PlayArea, false));
 		}
 	}
 
@@ -61,7 +63,7 @@ public class PlayAreaCouchDBDAO implements PlayAreaInterfaceDAO{
 		if (!containsPlayAreaByName(name))
 			return false;
 		try{
-			db.delete(copyPlayArea(getPlayArea(name)));
+			db.delete(copyPlayArea(getPlayArea(name), false));
 		} catch (Exception e){
 			// Unhandled Exception
 			return false;
@@ -135,7 +137,7 @@ public class PlayAreaCouchDBDAO implements PlayAreaInterfaceDAO{
 		return copyPlayArea;
 	}
 	
-	public PersistancePlayArea copyPlayArea(PlayAreaInterface pArea){
+	public PersistancePlayArea copyPlayArea(PlayAreaInterface pArea, boolean overwrite){
 		// We need a transformation from game-model to db-model
 		if (pArea == null)
 			return null;
@@ -143,7 +145,18 @@ public class PlayAreaCouchDBDAO implements PlayAreaInterfaceDAO{
 		PersistancePlayArea transformedArea;
 		if (containsPlayAreaByName(name)){
 			// Ist bereits in DB
-			transformedArea = (PersistancePlayArea) db.find(PersistancePlayArea.class, name);
+			if (!overwrite) {
+				transformedArea = (PersistancePlayArea) db.find(PersistancePlayArea.class, name);
+			}
+			else{
+				transformedArea = (PersistancePlayArea) db.find(PersistancePlayArea.class, name);
+				transformedArea.setColumns(pArea.getColumns());
+				transformedArea.setRows(pArea.getRows());
+				transformedArea.setPlayers(pArea.getPlayerList());
+				transformedArea.setId(pArea.getId());
+				transformedArea.setClearFeld(pArea.getRows(), pArea.getColumns());
+				transformedArea.replacePlayArea(transformedArea.getFeld(), pArea.getFeld(), pArea.getName(), pArea.getColumns(), pArea.getRows());
+			}
 		} else {
 			// Ist noch nicht in DB
 			transformedArea = new PersistancePlayArea();

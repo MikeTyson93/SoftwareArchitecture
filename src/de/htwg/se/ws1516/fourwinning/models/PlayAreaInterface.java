@@ -13,7 +13,7 @@ public interface PlayAreaInterface {
 	String getName();
 	void setName(String name);
 	void replacePlayArea(Feld[][] feld, String name, int columns, int rows);
-	public void setPlayers(Player one, Player two);
+	void setPlayers(Player one, Player two);
 	Player getPlayer(int idx);
 	void clearPlayers();
 	LinkedList<Player> getPlayerList();

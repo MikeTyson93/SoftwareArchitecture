@@ -27,7 +27,8 @@ public class SavegamePanel extends JPanel implements ActionListener{
         //construct components
         jcomp1 = new JButton ("Neu");
         jcomp2 = new JButton ("OK");
-        jcomp3 = new JButton ("Löschen");
+        jcomp3 = new JButton ("Loeschen");
+        jcomp5 = new JButton ("Abbrechen");
         listenModell = new DefaultListModel();
         
         jcomp4 = new JList (listenModell);
@@ -41,11 +42,12 @@ public class SavegamePanel extends JPanel implements ActionListener{
         add (jcomp2);
         add (jcomp3);
         add (jcomp4);
-
+        add (jcomp5);
         //set component bounds (only needed by Absolute Positioning)
         jcomp1.setBounds (275, 30, 100, 20);
         jcomp2.setBounds (40, 330, 100, 20);
         jcomp3.setBounds (275, 60, 100, 20);
+        jcomp5.setBounds (275, 330, 100, 20);
         jcomp4.setBounds (40, 30, 205, 280);
         
         
@@ -53,6 +55,7 @@ public class SavegamePanel extends JPanel implements ActionListener{
         jcomp1.addActionListener(this);
         jcomp2.addActionListener(this);
         jcomp3.addActionListener(this);
+        jcomp5.addActionListener(this);
     }
     
     @Override
@@ -63,7 +66,7 @@ public class SavegamePanel extends JPanel implements ActionListener{
 			String saveGame = JOptionPane.showInputDialog(frame, "Namen des neuen Spielstandes eingeben.");
 			if (!spiel.saveToDB(saveGame)){
 				int dialogButton = JOptionPane.YES_NO_OPTION;
-				int dialogResult = JOptionPane.showConfirmDialog (null, "Spielstand existiert bereits. Möchten Sie diesen überschreiben?","Warning",dialogButton);
+				int dialogResult = JOptionPane.showConfirmDialog (null, "Spielstand existiert bereits. Mï¿½chten Sie diesen ï¿½berschreiben?","Warning",dialogButton);
 				if(dialogResult == JOptionPane.YES_OPTION){
 					spiel.updateToDB(saveGame);
 				}
@@ -72,19 +75,31 @@ public class SavegamePanel extends JPanel implements ActionListener{
 			refreshList();
 			
 		} else if (quelle == jcomp2){
-			// Okay
-			frame.dispose();
-			
+            String selected = (String)jcomp4.getSelectedValue();
+            if (selected == null) {
+                frame.dispose();
+                return;
+            }
+            selected = selected.split("\t")[1];
+            int dialogButton = JOptionPane.YES_NO_OPTION;
+            int dialogResult = JOptionPane.showConfirmDialog (null, "MÃ¶chten Sie den ausgewÃ¤hlten Spielstand Ã¼berschreiben?","Warning",dialogButton);
+            if(dialogResult == JOptionPane.YES_OPTION){
+                spiel.updateToDB(selected);
+            }
+            frame.dispose();
 		} else if (quelle == jcomp3){
-			// Ausgewählten Spielstand löschen
+			// Ausgewï¿½hlten Spielstand lï¿½schen
 			String selected = (String)jcomp4.getSelectedValue();
 			selected = selected.split("\t")[1];
 			if (!spiel.deleteFromDB(selected)){
-				JOptionPane.showMessageDialog(null, "Spielstand konnte nicht gelöscht werden.", "Fehler",
+				JOptionPane.showMessageDialog(null, "Spielstand konnte nicht gelï¿½scht werden.", "Fehler",
 				        JOptionPane.ERROR_MESSAGE);
 			}
 			refreshList();
-		}
+		} else if (quelle == jcomp5){
+		    // Abbrechen
+            frame.dispose();
+        }
 	}
 
 
