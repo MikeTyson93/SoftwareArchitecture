@@ -1,10 +1,8 @@
 package de.htwg.se.ws1516.fourwinning;
 import com.google.inject.AbstractModule;
-
 import de.htwg.se.ws1516.fourwinning.controller.IGameController;
 import de.htwg.se.ws1516.fourwinning.models.IPlayerAreaFactory;
 import de.htwg.se.ws1516.fourwinning.persistence.PlayAreaInterfaceDAO;
-import de.htwg.se.ws1516.fourwinning.persistence.couchdb.*;
 
 
 public class FourWinningModule extends AbstractModule{
@@ -18,7 +16,9 @@ public class FourWinningModule extends AbstractModule{
 
 	        //bind(PlayAreaInterfaceDAO.class).to(
 	        //		de.htwg.se.ws1516.fourwinning.persistence.db4o.PlayAreaDb4oDAO.class);
+	        //bind(PlayAreaInterfaceDAO.class).to(
+	        //		de.htwg.se.ws1516.fourwinning.persistence.couchdb.PlayAreaCouchDBDAO.class);
 	        bind(PlayAreaInterfaceDAO.class).to(
-	        		de.htwg.se.ws1516.fourwinning.persistence.couchdb.PlayAreaCouchDBDAO.class);
+	        		de.htwg.se.ws1516.fourwinning.persistence.hibernate.PlayAreaHibernateDAO.class);
 	 }
 }
