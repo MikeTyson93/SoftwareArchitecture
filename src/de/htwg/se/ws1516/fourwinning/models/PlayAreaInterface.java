@@ -19,4 +19,6 @@ public interface PlayAreaInterface {
 	LinkedList<Player> getPlayerList();
 	String getId();
 	void setId(String id);
+	void clearFeld();
+	String toJson();
 }

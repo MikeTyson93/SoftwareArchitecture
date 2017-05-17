@@ -12,6 +12,7 @@ import de.htwg.se.ws1516.fourwinning.models.Feld;
 import de.htwg.se.ws1516.fourwinning.models.Player;
 import de.htwg.util.observer.Event;
 import de.htwg.util.observer.IObserver;
+import de.htwg.se.ws1516.fourwinning.controller.impl.NewGameEvent;
 import de.htwg.se.ws1516.fourwinning.view.gui.SavegamePanel;
 
 
@@ -82,7 +83,7 @@ public class Gui extends JFrame implements ActionListener, IObserver {
 			datei.add(close);
 			zug = new JMenu("Zug");
 			menueBar.add(zug);
-			zugUndo = new JMenuItem("Zug rückgängig machen");
+			zugUndo = new JMenuItem("Zug rï¿½ckgï¿½ngig machen");
 			zugUndo.addActionListener(this);
 			zug.add(zugUndo);
 			zugRedo = new JMenuItem("Zug wiederholen");
@@ -135,7 +136,7 @@ public class Gui extends JFrame implements ActionListener, IObserver {
 
 			setVisible(true);
 		} catch (Exception x) {
-			JOptionPane.showMessageDialog(null, "Ungültige Spielparameter eingegeben", "Fehler",
+			JOptionPane.showMessageDialog(null, "Ungï¿½ltige Spielparameter eingegeben", "Fehler",
 					JOptionPane.ERROR_MESSAGE);
 			LOGGER.log(Level.SEVERE,fehler, x);
 			return;
@@ -189,25 +190,23 @@ public class Gui extends JFrame implements ActionListener, IObserver {
 			this.eins = spiel.getPlayerOne();
 			this.zwei = spiel.getPlayerTwo();
 			this.aktiv = spiel.aktiverSpieler();
+			lSpieler.setText(spiel.aktiverSpieler().getName() + " ist am Zug!");
 		}
-			/*
-			while (!validName){
-				String savegame = JOptionPane.showInputDialog("Name des Speicherstandes angeben.");
-				if (!spiel.saveToDB(savegame)){
-					
-					continue;
-				}
-				validName = true;
-			}
-			return;
-		}*/
-		
+
 		if (quelle == close) {
 			Runtime.getRuntime().halt(0);
 		}
 
+		if (quelle == newGame){
+			spiel.newGame();
+			for (Component cp : einwerfenPanel.getComponents() ){
+				cp.setEnabled(true);
+			}
+		}
+
+
 		if (quelle == autor) {
-			JOptionPane.showMessageDialog(null, "Sebastian Gerstmeier & Michael Merkle", "Autor",
+			JOptionPane.showMessageDialog(null, "David Kuba & Michael Merkle", "Autor",
 					JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
@@ -220,13 +219,27 @@ public class Gui extends JFrame implements ActionListener, IObserver {
 				spiel.zug(i, aktiv);
 				
 				if (spiel.spielGewonnen(spielfeld, aktiv)) {
-					
-					Runtime.getRuntime().halt(0);
+
+					int dialogResult = JOptionPane.showConfirmDialog (null, "Spiel beendet. Wollen Sie eine weitere Runde spielen?","Warning",JOptionPane.YES_NO_OPTION);
+					if(dialogResult == JOptionPane.YES_OPTION){
+						spiel.newGame();
+					} else {
+						for (Component cp : einwerfenPanel.getComponents() ){
+							cp.setEnabled(false);
+						}
+					}
 				}
 				
 				if (spiel.spielDraw(spielfeld)) {
-					
-					Runtime.getRuntime().halt(0);
+
+					int dialogResult = JOptionPane.showConfirmDialog (null, "Spiel beendet. Wollen Sie eine weitere Runde spielen?","Warning",JOptionPane.YES_NO_OPTION);
+					if(dialogResult == JOptionPane.YES_OPTION){
+						spiel.newGame();
+					} else {
+						for (Component cp : einwerfenPanel.getComponents() ){
+							cp.setEnabled(false);
+						}
+					}
 				}
 				
 				spiel.changePlayer(eins, zwei);
@@ -251,11 +264,26 @@ public class Gui extends JFrame implements ActionListener, IObserver {
 		} else if (e instanceof GameDrawEvent){
 			JOptionPane.showMessageDialog(null, "Game Draw!", "",
 					JOptionPane.ERROR_MESSAGE);
-			Runtime.getRuntime().halt(0);
 		} else if (e instanceof GameLoadEvent){
 			this.spielfeld = spiel.update();
 			ausgabe(rows, columns, eins, zwei);
+		} else if (e instanceof NewGameEvent){
+			ausgabe(rows, columns, eins, zwei);
+			this.aktiv = spiel.inAktiverSpieler();
+			// we don't want to get the active one, because it will be changed later before a chip was set
+			String message = "Neues spiel wurde gestartet. Spieler: " + this.aktiv.getName() + " ist an der Reihe";
+			JOptionPane.showConfirmDialog(null,
+					message,
+					"Neues Spiel",
+					JOptionPane.DEFAULT_OPTION,
+					JOptionPane.PLAIN_MESSAGE);
+			for (Component cp : einwerfenPanel.getComponents() ){
+				cp.setEnabled(true);
+			}
+			this.spielfeld = spiel.update();
+
 		}
+
 	}
 	
 

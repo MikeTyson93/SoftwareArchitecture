@@ -93,6 +93,15 @@ public class GameController extends Observable implements IGameController {
 	}
 
 	@Override
+	public Player inAktiverSpieler(){
+		if (one.getActive()){
+			return two;
+		} else{
+			return one;
+		}
+	}
+
+	@Override
 	public Player getPlayerOne() {
 		return one;
 	}
@@ -233,7 +242,15 @@ public class GameController extends Observable implements IGameController {
         this.state = state;
         
     }
-	
+
+    @Override
+	public void newGame(){
+		grid.clearFeld();
+		regeln.resetCounters();
+		notifyObservers(new NewGameEvent());
+
+	}
+
 	@Override
 	public IGameState getState(){
 		return state;
