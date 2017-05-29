@@ -1,5 +1,6 @@
 package de.htwg.se.ws1516.fourwinning.persistence.hibernate;
 
+import de.htwg.se.ws1516.fourwinning.models.Feld;
 import de.htwg.se.ws1516.fourwinning.models.PlayArea;
 import de.htwg.se.ws1516.fourwinning.models.Player;
 
@@ -19,14 +20,17 @@ public class PersistencePlayArea {
     @Column(name = "ID")
     public int id;
 
-    @Column(name = "Feld")
-    private PersistanceFeld[][] feld;
-
     @Column(name = "columns")
     private int columns;
 
     @Column(name = "rows")
     private int rows;
+
+    @ElementCollection
+    @CollectionTable(name="FeldList")
+    @OrderColumn
+    @Column(name = "Feld")
+    private PersistanceFeld[][] feld;
 
     @Column(name = "name")
     String name;
@@ -48,10 +52,13 @@ public class PersistencePlayArea {
         buildArea(rows,columns);
     }
     public PersistencePlayArea(PlayArea playArea){
-        this.columns = playArea.getColumns();
         this.rows = playArea.getRows();
-        this.feld = new PersistanceFeld[rows][columns];
+        this.columns = playArea.getColumns();
         this.name = playArea.getName();
+        this.feld = new PersistanceFeld[rows][columns];
+        buildArea(rows,columns);
+        replacePlayArea(playArea.getFeld(), name, columns, rows);
+        //this.feld = new PersistanceFeld[rows][columns];
         this.playerlist = new LinkedList<>();
         for (Player player:playArea.getPlayerList()) {
             this.playerlist.add(new PersistancePlayer(player));
@@ -64,39 +71,11 @@ public class PersistencePlayArea {
     public void buildArea(int rows, int columns){
         for(int i = 0; i < rows; i++){
             for (int j = 0; j<columns; j++){
-                feld[i][j] = new PersistanceFeld(i,j,null);
+                feld[i][j] = new PersistanceFeld();
             }
         }
     }
 
-    //Chip an freie Stelle setzen
-    public int setChip(int column, PersistancePlayer p){
-        if (column < 0
-                || column >= columns) return -2; //Zug fehlgeschlagen
-        boolean find = false;
-        int emptyRow = -1;
-        int currentRow = 0;
-
-        //Freien Platz an der Stelle der Spalte finden
-        while (!find){
-            if (feld[currentRow][column].getSet()){
-                find = true;
-                emptyRow = currentRow - 1;
-            } else if (currentRow == rows-1){
-                find = true;
-                emptyRow = rows-1;
-            }
-            currentRow++;
-        }
-
-        //Chip wird gelegt
-        if (emptyRow != -1){
-            feld[emptyRow][column].setOwner(p);
-            p.chipSetted();
-            return emptyRow;            //Zug erfolgreich
-        }
-        return -2;                          //Zug fehlgeschalgen
-    }
 
     public int getColumns(){
         return columns;
@@ -122,13 +101,16 @@ public class PersistencePlayArea {
         this.name = name;
     }
 
-    public void replacePlayArea(PersistanceFeld[][] feldcopy, String name, int columns, int rows) {
+    public void replacePlayArea(Feld[][] feldcopy, String name, int columns, int rows) {
         for (int i = 0; i < rows; i++){
             for (int j = 0; j < columns; j++){
                 feld[i][j].setX(feldcopy[i][j].getX());
                 feld[i][j].setY(feldcopy[i][j].getY());
                 feld[i][j].setSet(feldcopy[i][j].getSet());
-                feld[i][j].setOwner(feldcopy[i][j].getOwner());
+                if(feldcopy[i][j].getOwner() != null){
+                    feld[i][j].setOwner(new PersistancePlayer(feldcopy[i][j].getOwner()));
+                }
+
             }
         }
         this.name = name;
