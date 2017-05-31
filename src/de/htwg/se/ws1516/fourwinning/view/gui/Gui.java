@@ -15,7 +15,6 @@ import de.htwg.util.observer.IObserver;
 import de.htwg.se.ws1516.fourwinning.controller.impl.NewGameEvent;
 import de.htwg.se.ws1516.fourwinning.view.gui.SavegamePanel;
 
-
 import javax.swing.*;
 
 import com.google.inject.Inject;

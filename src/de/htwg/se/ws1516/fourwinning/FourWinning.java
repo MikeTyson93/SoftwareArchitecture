@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import de.htwg.se.ws1516.fourwinning.view.gui.*;
 import de.htwg.se.ws1516.fourwinning.view.tui.*;
+import de.htwg.se.ws1516.fourwinning.view.ConnectFourService;
 import de.htwg.se.ws1516.fourwinning.controller.IGameController;
 import de.htwg.se.ws1516.fourwinning.models.Player;
 
@@ -33,7 +34,8 @@ public class FourWinning {
 		textUI.createGameArea();
 		textUI.createPlayers();
 		graphicUI.createPlayers();
-		instance = null;
+		ConnectFourService microservice = new ConnectFourService();
+		//instance = null;
 	}
 
 	public static IGameController getController(){

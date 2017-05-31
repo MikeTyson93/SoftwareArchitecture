@@ -125,9 +125,9 @@ public class PlayAreaCouchDBDAO implements PlayAreaInterfaceDAO{
 				Player owner = null;
 				if (areaOfDb[i][j].getOwner() != null) {
 					String playerName = areaOfDb[i][j].getOwner().getName();
-					int menge = areaOfDb[i][j].getOwner().getMenge();
+					int zuege = areaOfDb[i][j].getOwner().getZuege();
 					boolean isActive = areaOfDb[i][j].getOwner().getActive();
-					owner = new Player(playerName, menge);
+					owner = new Player(playerName, zuege);
 					owner.setActive(isActive);
 					areaOfGame[i][j].setOwner(owner);
 				}

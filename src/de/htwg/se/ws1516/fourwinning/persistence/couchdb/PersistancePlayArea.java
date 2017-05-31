@@ -73,7 +73,7 @@ public class PersistancePlayArea extends CouchDbDocument {
     		PersistancePlayer pp = new PersistancePlayer();
     		pp.setName(p.getName());
     		pp.setActive(p.getActive());
-    		pp.setMenge(p.getMenge());
+    		pp.setZuege(p.getZuege());
     		this.players.add(pp);
 		}
     }

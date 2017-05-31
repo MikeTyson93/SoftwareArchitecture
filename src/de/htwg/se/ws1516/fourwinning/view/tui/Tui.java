@@ -233,7 +233,7 @@ public class Tui implements IObserver {
 			ausgabe(spielfeld, rows, columns, eins, zwei);
 			this.aktiv = spiel.aktiverSpieler();
 		} else if (e instanceof GameOverEvent) {
-			String gameOver = String.format("%n%s hat das Spiel gewonnen!%n", aktiv.getName());
+			String gameOver = String.format("%n%s hat das Spiel in %d Zuegen gewonnen!%n", aktiv.getName(), aktiv.getZuege());
 			LOGGER.info(gameOver);
 		} else if (e instanceof GameDrawEvent){
 			String gameDraw = "Draw";

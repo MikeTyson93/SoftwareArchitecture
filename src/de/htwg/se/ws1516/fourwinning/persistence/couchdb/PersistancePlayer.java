@@ -6,16 +6,16 @@ public class PersistancePlayer extends CouchDbDocument{
     @TypeDiscriminator
     String id;
     String name;
-    int menge;
+    int zuege;
     boolean active;
     boolean gewonnen = false;
 
     PersistancePlayer(){
     }
 
-    /*public PersistancePlayer(String name, int menge, boolean active, String sessionName){
+    /*public PersistancePlayer(String name, int zuege, boolean active, String sessionName){
         this.name = name;
-        this.menge = menge;
+        this.zuege = zuege;
         this.active = active;
         this.sessionName = sessionName;
     }*/
@@ -29,15 +29,15 @@ public class PersistancePlayer extends CouchDbDocument{
     }
 
     public void chipSetted(){
-        menge--;
+        zuege++;
     }
 
-    public void setMenge(int menge){
-        this.menge = menge;
+    public void setZuege(int zuege){
+        this.zuege = zuege;
     }
 
-    public int getMenge(){
-        return menge;
+    public int getZuege(){
+        return zuege;
     }
 
     public void setName(String name){

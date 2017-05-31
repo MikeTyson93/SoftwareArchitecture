@@ -247,6 +247,8 @@ public class GameController extends Observable implements IGameController {
 	public void newGame(){
 		grid.clearFeld();
 		regeln.resetCounters();
+		one.resetZuege();
+		two.resetZuege();
 		notifyObservers(new NewGameEvent());
 
 	}
