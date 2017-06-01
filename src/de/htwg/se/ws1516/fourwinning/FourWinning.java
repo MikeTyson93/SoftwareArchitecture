@@ -34,7 +34,7 @@ public class FourWinning {
 		textUI.createGameArea();
 		textUI.createPlayers();
 		graphicUI.createPlayers();
-		ConnectFourService microservice = new ConnectFourService();
+		ConnectFourService microservice = new ConnectFourService(controller);
 		//instance = null;
 	}
 
