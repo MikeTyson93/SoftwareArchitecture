@@ -51,7 +51,6 @@ public class ConnectFourService implements IObserver{
                                     .withStatus(404)
                                     .withEntity("Unknown resource!");
 
-
                     @Override
                     public HttpResponse apply(HttpRequest request) throws Exception {
                         Uri uri = request.getUri();
@@ -68,6 +67,7 @@ public class ConnectFourService implements IObserver{
                                         HttpResponse.create()
                                                 .withEntity("Hello " + name + "!");
                             } else if (uri.path().equals("/show")) {
+
                                 Feld[][] feld = spiel.update();
                                 int rows = spiel.getRows();
                                 int columns = spiel.getColumns();
@@ -124,7 +124,7 @@ public class ConnectFourService implements IObserver{
     public void update(Event e) {
         // Need for dynamic reload of the gamefield!!!!
         if (e == null) {
-            
+
         } else if (e instanceof GameOverEvent) {
             //String gameOver = String.format("%n%s hat das Spiel in %d Zuegen gewonnen!%n", aktiv.getName(), aktiv.getZuege());
         } else if (e instanceof GameDrawEvent){
