@@ -9,7 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "Field")
-public class PersistanceFeld {
+public class PersistenceFeld {
     @Id @GeneratedValue
     @Column(name = "ID")
     public int id;
@@ -19,7 +19,7 @@ public class PersistanceFeld {
 
     @ManyToOne
     @JoinColumn(name = "owner")
-    PersistancePlayer owner;
+    PersistencePlayer owner;
 
     @Column(name = "xValue")
     private int x;
@@ -27,24 +27,24 @@ public class PersistanceFeld {
     @Column(name = "yValue")
     private int y;
 
-    public PersistanceFeld(int x, int y){
+    public PersistenceFeld(int x, int y){
         this.x = x;
         this.y = y;
     }
 
-    public PersistanceFeld(){
+    public PersistenceFeld(){
     }
 
-    public PersistanceFeld(int x, int y, PersistancePlayer owner){
+    public PersistenceFeld(int x, int y, PersistencePlayer owner){
         this.owner = owner;
         this.x = x;
         this.y = y;
     }
 
-    public PersistanceFeld(Feld feld){
+    public PersistenceFeld(Feld feld){
         this.x = feld.getX();
         this.y = feld.getY();
-        this.owner = new PersistancePlayer(feld.getOwner());
+        this.owner = new PersistencePlayer(feld.getOwner());
     }
 
     public void setSet(boolean isSet){
@@ -55,11 +55,11 @@ public class PersistanceFeld {
         return this.isSet;
     }
 
-    public void setOwner(PersistancePlayer owner){
+    public void setOwner(PersistencePlayer owner){
         this.owner = owner;
     }
 
-    public PersistancePlayer getOwner(){
+    public PersistencePlayer getOwner(){
         return this.owner;
     }
 

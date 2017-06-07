@@ -11,7 +11,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Player")
-public class PersistancePlayer implements PlayerInterface {
+public class PersistencePlayer implements PlayerInterface {
     @Id
     @GeneratedValue
     @Column(name = "ID")
@@ -32,17 +32,17 @@ public class PersistancePlayer implements PlayerInterface {
     @Column(name = "sessionName")
     String sessionName;
 
-    public PersistancePlayer(String name, int menge){
+    public PersistencePlayer(String name, int menge){
         this.name = name;
         this.menge = menge;
         this.sessionName = "default";
     }
-    public PersistancePlayer(Player player){
+    public PersistencePlayer(Player player){
         this.name = player.getName() ;
         this.menge = player.getMenge();
         this.sessionName = "default";
     }
-    public PersistancePlayer(){
+    public PersistencePlayer(){
 
     }
 

@@ -8,9 +8,7 @@ import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by Kuba on 24.04.2017.
- */
+
 @Entity
 @Table(name = "PlayArea")
 public class PersistencePlayArea {
@@ -26,55 +24,59 @@ public class PersistencePlayArea {
     @Column(name = "rows")
     private int rows;
 
-    @ElementCollection
-    @CollectionTable(name="FeldList")
-    @OrderColumn
-    @Column(name = "Feld")
-    private PersistanceFeld[][] feld;
-
     @Column(name = "name")
-    String name;
+    private String name;
 
-    @ElementCollection
-    @CollectionTable(name="Playerlist")
-    @Column(name= "playerlist")
-    List<PersistancePlayer> playerlist;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "feld")
+    private PersistenceGrid feld;
+
+    //@ElementCollection
+    //@CollectionTable(name="Playerlist")
+    //@Column(name= "playerlist")
+    //@Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @ManyToOne(cascade = CascadeType.ALL, targetEntity = PersistencePlayer.class)
+    @JoinColumn(name = "playerList")
+    private List<PersistencePlayer> playerlist;
+
 
     //Konstruktor
 
     public PersistencePlayArea(int rows, int columns){
-        feld = new PersistanceFeld[rows][columns];
+        this.feld = new PersistenceGrid(rows, columns);
         this.columns = columns;
         this.rows = rows;
         name = "default";
         // 1 to many relationship
         playerlist = new LinkedList<>();
-        buildArea(rows,columns);
+        //buildArea(rows,columns);
     }
     public PersistencePlayArea(PlayArea playArea){
         this.rows = playArea.getRows();
         this.columns = playArea.getColumns();
         this.name = playArea.getName();
-        this.feld = new PersistanceFeld[rows][columns];
-        buildArea(rows,columns);
+        this.feld = new PersistenceGrid(rows, columns);
+        //buildArea(rows,columns);
         replacePlayArea(playArea.getFeld(), name, columns, rows);
-        //this.feld = new PersistanceFeld[rows][columns];
         this.playerlist = new LinkedList<>();
         for (Player player:playArea.getPlayerList()) {
-            this.playerlist.add(new PersistancePlayer(player));
+            this.playerlist.add(new PersistencePlayer(player));
         }
     }
     public PersistencePlayArea(){
+        this.feld = new PersistenceGrid();
     }
 
+    /*
     //Spielfeld wird gebaut
     public void buildArea(int rows, int columns){
         for(int i = 0; i < rows; i++){
             for (int j = 0; j<columns; j++){
-                feld[i][j] = new PersistanceFeld();
+                feld[i][j] = new PersistenceFeld();
             }
         }
     }
+    */
 
 
     public int getColumns(){
@@ -85,11 +87,11 @@ public class PersistencePlayArea {
         return rows;
     }
 
-    public PersistanceFeld[][] getFeld(){
+    public PersistenceGrid getFeld(){
         return feld;
     }
 
-    public void setFeld(PersistanceFeld[][] zusatzfeld){
+    public void setFeld(PersistenceGrid zusatzfeld){
         this.feld = zusatzfeld;
     }
 
@@ -104,13 +106,14 @@ public class PersistencePlayArea {
     public void replacePlayArea(Feld[][] feldcopy, String name, int columns, int rows) {
         for (int i = 0; i < rows; i++){
             for (int j = 0; j < columns; j++){
-                feld[i][j].setX(feldcopy[i][j].getX());
-                feld[i][j].setY(feldcopy[i][j].getY());
-                feld[i][j].setSet(feldcopy[i][j].getSet());
+                PersistenceFeld tmpFeld = new PersistenceFeld(columns, rows);
+                tmpFeld.setX(feldcopy[i][j].getX());
+                tmpFeld.setY(feldcopy[i][j].getY());
+                tmpFeld.setSet(feldcopy[i][j].getSet());
                 if(feldcopy[i][j].getOwner() != null){
-                    feld[i][j].setOwner(new PersistancePlayer(feldcopy[i][j].getOwner()));
+                    tmpFeld.setOwner(new PersistencePlayer(feldcopy[i][j].getOwner()));
                 }
-
+                feld.setField(feldcopy[i][j].getX(), feldcopy[i][j].getY(), tmpFeld);
             }
         }
         this.name = name;
@@ -118,7 +121,7 @@ public class PersistencePlayArea {
         this.rows = rows;
     }
 
-    public void setPlayers(PersistancePlayer one, PersistancePlayer two){
+    public void setPlayers(PersistencePlayer one, PersistencePlayer two){
         playerlist.add(one);
         playerlist.add(two);
     }
@@ -128,12 +131,12 @@ public class PersistencePlayArea {
 
     }
 
-    public PersistancePlayer getPlayer(int idx){
+    public PersistencePlayer getPlayer(int idx){
         return playerlist.get(idx);
 
     }
 
-    public List<PersistancePlayer> getPlayerList(){
+    public List<PersistencePlayer> getPlayerList(){
         return playerlist;
     }
 }
