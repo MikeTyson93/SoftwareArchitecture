@@ -9,15 +9,12 @@ import java.util.List;
 public class PersistenceGrid {
     @Id
     @GeneratedValue
-    @Column(name = "ID")
+    @Column(name = "Grid_id")
     public int id;
 
-    //@ElementCollection
-    //@CollectionTable(name="gridList")
-    //@Column(name= "grid")
-    //@Cascade({CascadeType.MERGE, CascadeType.SAVE_UPDATE})
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "gridColumn")
-    private List<PersistenceColumn> grid;
+    @JoinTable
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<PersistenceFeld> grid;
 
 
     public PersistenceGrid(){
@@ -25,27 +22,26 @@ public class PersistenceGrid {
     }
 
     public PersistenceGrid(int rows, int columns){
-        int counter = 0;
         grid = new LinkedList<>();
         for (int i=0; i < rows; i++){
-            PersistenceColumn tmpList = new PersistenceColumn();
             for (int j = 0; j < columns; j++) {
-                tmpList.setColumn(j, new PersistenceFeld());
+                grid.add(i+j, new PersistenceFeld(i,j));
             }
-            grid.add(counter, tmpList);
-            counter++;
         }
 
     }
 
     public void setField(int row, int column, PersistenceFeld feld){
-        PersistenceColumn tmpList = grid.get(row);
-        tmpList.setColumn(column, feld);
-        grid.add(row, tmpList);
+        PersistenceFeld tmpField = getField(row, column);
+        grid.set(grid.indexOf(tmpField), feld);
     }
 
     public PersistenceFeld getField(int row, int column){
-        PersistenceColumn tmpList = grid.get(row);
-        return tmpList.getValue(column);
+        for (PersistenceFeld tmpField : grid) {
+            if (tmpField.getX() == row && tmpField.getY() == column) {
+                return tmpField;
+            }
+        }
+        return null;
     }
 }

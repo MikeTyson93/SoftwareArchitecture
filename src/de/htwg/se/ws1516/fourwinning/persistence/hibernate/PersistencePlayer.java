@@ -3,7 +3,14 @@ package de.htwg.se.ws1516.fourwinning.persistence.hibernate;
 import de.htwg.se.ws1516.fourwinning.models.Player;
 import de.htwg.se.ws1516.fourwinning.models.PlayerInterface;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * Created by Kuba on 17.05.2017.
@@ -14,8 +21,10 @@ import javax.persistence.*;
 public class PersistencePlayer implements PlayerInterface {
     @Id
     @GeneratedValue
-    @Column(name = "ID")
+    @Column(name = "player_ID")
     public int id;
+
+
 
     @Column(name = "name")
     String name;
@@ -43,7 +52,6 @@ public class PersistencePlayer implements PlayerInterface {
         this.sessionName = "default";
     }
     public PersistencePlayer(){
-
     }
 
     public String getName(){

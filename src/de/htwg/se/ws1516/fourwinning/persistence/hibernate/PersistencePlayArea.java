@@ -15,7 +15,7 @@ public class PersistencePlayArea {
 
     @Id
     @GeneratedValue
-    @Column(name = "ID")
+    @Column(name = "area_ID")
     public int id;
 
     @Column(name = "columns")
@@ -27,23 +27,20 @@ public class PersistencePlayArea {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "feld")
-    private PersistenceGrid feld;
-
-    //@ElementCollection
-    //@CollectionTable(name="Playerlist")
-    //@Column(name= "playerlist")
-    //@Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = PersistencePlayer.class)
-    @JoinColumn(name = "playerList")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable
     private List<PersistencePlayer> playerlist;
+
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "grid")
+    private PersistenceGrid grid;
 
 
     //Konstruktor
 
     public PersistencePlayArea(int rows, int columns){
-        this.feld = new PersistenceGrid(rows, columns);
+        this.grid = new PersistenceGrid(rows, columns);
         this.columns = columns;
         this.rows = rows;
         name = "default";
@@ -55,8 +52,7 @@ public class PersistencePlayArea {
         this.rows = playArea.getRows();
         this.columns = playArea.getColumns();
         this.name = playArea.getName();
-        this.feld = new PersistenceGrid(rows, columns);
-        //buildArea(rows,columns);
+        this.grid = new PersistenceGrid(rows, columns);
         replacePlayArea(playArea.getFeld(), name, columns, rows);
         this.playerlist = new LinkedList<>();
         for (Player player:playArea.getPlayerList()) {
@@ -64,19 +60,9 @@ public class PersistencePlayArea {
         }
     }
     public PersistencePlayArea(){
-        this.feld = new PersistenceGrid();
+        this.grid = new PersistenceGrid();
     }
 
-    /*
-    //Spielfeld wird gebaut
-    public void buildArea(int rows, int columns){
-        for(int i = 0; i < rows; i++){
-            for (int j = 0; j<columns; j++){
-                feld[i][j] = new PersistenceFeld();
-            }
-        }
-    }
-    */
 
 
     public int getColumns(){
@@ -87,12 +73,12 @@ public class PersistencePlayArea {
         return rows;
     }
 
-    public PersistenceGrid getFeld(){
-        return feld;
+    public PersistenceGrid getGrid(){
+        return grid;
     }
 
-    public void setFeld(PersistenceGrid zusatzfeld){
-        this.feld = zusatzfeld;
+    public void setGrid(PersistenceGrid zusatzfeld){
+        this.grid = zusatzfeld;
     }
 
     public String getName() {
@@ -111,9 +97,9 @@ public class PersistencePlayArea {
                 tmpFeld.setY(feldcopy[i][j].getY());
                 tmpFeld.setSet(feldcopy[i][j].getSet());
                 if(feldcopy[i][j].getOwner() != null){
-                    tmpFeld.setOwner(new PersistencePlayer(feldcopy[i][j].getOwner()));
+                    tmpFeld.setOwner(feldcopy[i][j].getOwner().getName());
                 }
-                feld.setField(feldcopy[i][j].getX(), feldcopy[i][j].getY(), tmpFeld);
+                grid.setField(feldcopy[i][j].getX(), feldcopy[i][j].getY(), tmpFeld);
             }
         }
         this.name = name;

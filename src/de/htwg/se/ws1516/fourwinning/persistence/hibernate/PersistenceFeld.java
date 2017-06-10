@@ -4,9 +4,7 @@ import de.htwg.se.ws1516.fourwinning.models.Feld;
 
 import javax.persistence.*;
 
-/**
- * Created by Kuba on 24.04.2017.
- */
+
 @Entity
 @Table(name = "Field")
 public class PersistenceFeld {
@@ -17,9 +15,11 @@ public class PersistenceFeld {
     @Column(name = "isSet")
     boolean isSet = false;
 
-    @ManyToOne
-    @JoinColumn(name = "owner")
-    PersistencePlayer owner;
+    @Column
+    String owner;
+
+    @Column
+    int menge;
 
     @Column(name = "xValue")
     private int x;
@@ -36,7 +36,7 @@ public class PersistenceFeld {
     }
 
     public PersistenceFeld(int x, int y, PersistencePlayer owner){
-        this.owner = owner;
+        this.owner = owner.getName();
         this.x = x;
         this.y = y;
     }
@@ -44,7 +44,7 @@ public class PersistenceFeld {
     public PersistenceFeld(Feld feld){
         this.x = feld.getX();
         this.y = feld.getY();
-        this.owner = new PersistencePlayer(feld.getOwner());
+        this.owner = feld.getOwner().getName();
     }
 
     public void setSet(boolean isSet){
@@ -55,12 +55,12 @@ public class PersistenceFeld {
         return this.isSet;
     }
 
-    public void setOwner(PersistencePlayer owner){
+    public void setOwner(String owner){
         this.owner = owner;
     }
 
     public PersistencePlayer getOwner(){
-        return this.owner;
+        return new PersistencePlayer(this.owner, 20);
     }
 
     public void setId(int id){

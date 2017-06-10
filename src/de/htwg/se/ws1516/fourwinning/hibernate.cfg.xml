@@ -17,6 +17,5 @@
         <mapping class="de.htwg.se.ws1516.fourwinning.persistence.hibernate.PersistencePlayArea" />
         <mapping class="de.htwg.se.ws1516.fourwinning.persistence.hibernate.PersistencePlayer" />
         <mapping class="de.htwg.se.ws1516.fourwinning.persistence.hibernate.PersistenceGrid" />
-        <mapping class="de.htwg.se.ws1516.fourwinning.persistence.hibernate.PersistenceColumn" />
     </session-factory>
 </hibernate-configuration>
