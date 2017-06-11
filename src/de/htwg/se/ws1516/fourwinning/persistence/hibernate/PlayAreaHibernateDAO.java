@@ -90,16 +90,68 @@ public class PlayAreaHibernateDAO implements PlayAreaInterfaceDAO {
 
     @Override
     public boolean deletePlayArea(String name) {
-        return false;
+        int id = getIDbyName(name);
+        if (!containsPlayAreaByName(name)) {
+            return false;
+        }
+        Session session = HibernateUtil.getInstance().getCurrentSession();
+        Transaction tx = session.beginTransaction();
+        try{
+
+            PersistencePlayArea area = (PersistencePlayArea) session.get(PersistencePlayArea.class, id);
+            session.delete(area);
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override
     public boolean containsPlayAreaByName(String name) {
+        List<PlayArea> areas = getAllPlayAreas();
+        for(PlayArea area: areas){
+            if(area.getName().equals(name)){
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public PlayAreaInterface getPlayArea(String name) {
+        List<PlayArea> areas = getAllPlayAreas();
+        for(PlayArea area: areas){
+            if(area.getName().equals(name)){
+                return area;
+            }
+        }
         return null;
+    }
+
+    public int getIDbyName(String name){
+        Session session = HibernateUtil.getInstance().getCurrentSession();
+        Transaction tx = session.beginTransaction();
+        List<PersistencePlayArea> areas = new LinkedList<PersistencePlayArea>();
+        int id;
+        try{
+            //areas = session.createCriteria("PersistencePlayer.class").list();
+            areas = session.createQuery("from PersistencePlayArea").list();
+        }catch(HibernateException e) {
+            tx.rollback();
+            e.printStackTrace();
+        }finally{
+            session.close();
+        }
+        if(!areas.isEmpty()) {
+            for (PersistencePlayArea area : areas) {
+                if (area.getName().equals(name)) {
+                    return area.getID();
+                }
+            }
+        }
+        return 0;
     }
 }

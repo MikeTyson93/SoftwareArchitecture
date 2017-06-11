@@ -32,7 +32,7 @@ public class PersistencePlayArea {
     private List<PersistencePlayer> playerlist;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "grid")
     private PersistenceGrid grid;
 
@@ -120,6 +120,10 @@ public class PersistencePlayArea {
     public PersistencePlayer getPlayer(int idx){
         return playerlist.get(idx);
 
+    }
+
+    public int getID(){
+        return this.id;
     }
 
     public List<PersistencePlayer> getPlayerList(){
