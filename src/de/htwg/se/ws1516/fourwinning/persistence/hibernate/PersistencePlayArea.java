@@ -97,7 +97,7 @@ public class PersistencePlayArea {
                 tmpFeld.setY(feldcopy[i][j].getY());
                 tmpFeld.setSet(feldcopy[i][j].getSet());
                 if(feldcopy[i][j].getOwner() != null){
-                    tmpFeld.setOwner(feldcopy[i][j].getOwner().getName());
+                    tmpFeld.setOwner(new PersistencePlayer(feldcopy[i][j].getOwner()));
                 }
                 grid.setField(feldcopy[i][j].getX(), feldcopy[i][j].getY(), tmpFeld);
             }

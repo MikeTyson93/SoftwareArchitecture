@@ -1,6 +1,7 @@
 package de.htwg.se.ws1516.fourwinning.persistence.hibernate;
 
 import de.htwg.se.ws1516.fourwinning.models.Feld;
+import de.htwg.se.ws1516.fourwinning.models.Player;
 
 import javax.persistence.*;
 
@@ -37,6 +38,7 @@ public class PersistenceFeld {
 
     public PersistenceFeld(int x, int y, PersistencePlayer owner){
         this.owner = owner.getName();
+        this.menge = owner.getMenge();
         this.x = x;
         this.y = y;
     }
@@ -45,6 +47,7 @@ public class PersistenceFeld {
         this.x = feld.getX();
         this.y = feld.getY();
         this.owner = feld.getOwner().getName();
+        this.menge = feld.getOwner().getMenge();
     }
 
     public void setSet(boolean isSet){
@@ -55,12 +58,23 @@ public class PersistenceFeld {
         return this.isSet;
     }
 
-    public void setOwner(String owner){
-        this.owner = owner;
+    public void setOwner(PersistencePlayer owner){
+        this.owner = owner.getName();
+        this.menge = owner.getMenge();
     }
 
     public PersistencePlayer getOwner(){
-        return new PersistencePlayer(this.owner, 20);
+        return new PersistencePlayer(this.owner, this.menge);
+    }
+
+    public Player getOwnerAsGameModel(){
+        if(this.owner != null) {
+            return new Player(this.owner, this.menge);
+        }
+        else{
+            return null;
+        }
+
     }
 
     public void setId(int id){

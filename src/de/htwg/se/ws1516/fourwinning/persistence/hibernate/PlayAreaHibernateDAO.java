@@ -74,10 +74,12 @@ public class PlayAreaHibernateDAO implements PlayAreaInterfaceDAO {
         PersistenceGrid areaOfDb = pArea.getGrid();
         for (int i = 0; i < pArea.getRows(); i++){
             for (int j = 0; j < pArea.getColumns(); j++){
-                areaOfGame[i][j].setX(areaOfDb.getField(i,j).getX());
-                areaOfGame[i][j].setY(areaOfDb.getField(i,j).getY());
-                areaOfGame[i][j].setSet(areaOfDb.getField(i,j).getSet());
-                areaOfGame[i][j].setOwner(changeToGameModel(areaOfDb.getField(i,j).getOwner()));
+                PersistenceFeld currentField = areaOfDb.getField(i,j);
+                areaOfGame[i][j].setX(currentField.getX());
+                areaOfGame[i][j].setY(currentField.getY());
+                areaOfGame[i][j].setSet(currentField.getSet());
+                Player owner = currentField.getOwnerAsGameModel();
+                areaOfGame[i][j].setOwner(owner);
             }
         }
         copyPlayArea.replacePlayArea(areaOfGame, pArea.getName(), pArea.getColumns(), pArea.getRows());
