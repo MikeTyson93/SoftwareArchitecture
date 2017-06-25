@@ -1,5 +1,9 @@
 package de.htwg.se.ws1516.fourwinning.persistence.hibernate;
 
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Props;
+import de.htwg.se.ws1516.fourwinning.controller.actor.Actor;
 import de.htwg.se.ws1516.fourwinning.models.Feld;
 import de.htwg.se.ws1516.fourwinning.models.PlayArea;
 import de.htwg.se.ws1516.fourwinning.models.PlayAreaInterface;
@@ -92,6 +96,9 @@ public class PlayAreaHibernateDAO implements PlayAreaInterfaceDAO {
 
     @Override
     public boolean deletePlayArea(String name) {
+        final ActorSystem system = ActorSystem.create("system");
+        ActorRef actor = system.actorOf(Props.create(Actor.class));
+        actor.tell("Testing actor", null);
         int id = getIDbyName(name);
         if (!containsPlayAreaByName(name)) {
             return false;
