@@ -99,7 +99,6 @@ public class PlayAreaHibernateDAO implements PlayAreaInterfaceDAO {
 
     @Override
     public boolean deletePlayArea(String name) {
-        final ActorSystem system = ActorSystem.create("system");
         ActorRef actor = system.actorOf(Props.create(Actor.class));
         actor.tell("Testing actor", null);
         int id = getIDbyName(name);
