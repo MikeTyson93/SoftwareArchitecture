@@ -158,8 +158,12 @@ public class Gui extends JFrame implements ActionListener, IObserver {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Object quelle = e.getSource();
-		playGame(quelle);
+		try {
+			Object quelle = e.getSource();
+			playGame(quelle);
+		} catch(java.lang.NullPointerException ex){
+			return;
+		}
 	}
 
 	public void playGame(Object quelle) {
