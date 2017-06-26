@@ -22,14 +22,7 @@ import java.util.concurrent.CompletionStage;
 import akka.util.ByteString;
 import de.htwg.se.ws1516.fourwinning.models.*;
 import de.htwg.se.ws1516.fourwinning.controller.IGameController;
-import de.htwg.se.ws1516.fourwinning.controller.impl.GameDrawEvent;
-import de.htwg.se.ws1516.fourwinning.controller.impl.GameLoadEvent;
-import de.htwg.se.ws1516.fourwinning.controller.impl.GameOverEvent;
-import de.htwg.se.ws1516.fourwinning.view.tui.Tui;
-import de.htwg.util.observer.IObserver;
-import de.htwg.util.observer.Event;
-
-public class ConnectFourService implements IObserver{
+public class ConnectFourService{
     IGameController spiel;
     final Function<HttpRequest, HttpResponse> requestHandler;
     Source<IncomingConnection, CompletionStage<ServerBinding>> serverSource;
@@ -37,7 +30,6 @@ public class ConnectFourService implements IObserver{
 
     public ConnectFourService(IGameController spiel) {
         this.spiel = spiel;
-        spiel.addObserver(this);
         ActorSystem system = ActorSystem.create();
         materializer = ActorMaterializer.create(system);
 
@@ -119,18 +111,4 @@ public class ConnectFourService implements IObserver{
                     connection.handleWithSyncHandler(requestHandler, materializer);
                 })).run(materializer);
     }
-
-    @Override
-    public void update(Event e) {
-        // Need for dynamic reload of the gamefield!!!!
-        if (e == null) {
-
-        } else if (e instanceof GameOverEvent) {
-            //String gameOver = String.format("%n%s hat das Spiel in %d Zuegen gewonnen!%n", aktiv.getName(), aktiv.getZuege());
-        } else if (e instanceof GameDrawEvent){
-            //String gameDraw = "Draw";
-        } else if (e instanceof GameLoadEvent){
-        }
-    }
-
 }
