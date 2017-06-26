@@ -19,10 +19,13 @@ import java.util.List;
 
 public class PlayAreaHibernateDAO implements PlayAreaInterfaceDAO {
     //private static Session session = HibernateUtil.getInstance().getCurrentSession();
+    final ActorSystem system;
+
 
     public PlayAreaHibernateDAO(){
-
+        system =  ActorSystem.create("system");
     }
+
     @Override
     public void savePlayArea(PlayAreaInterface PlayArea) {
         Session session = HibernateUtil.getInstance().getCurrentSession();
