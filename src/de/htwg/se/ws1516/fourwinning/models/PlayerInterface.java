@@ -5,5 +5,6 @@ public interface PlayerInterface {
 	void setActive(boolean zustand);
 	boolean getActive();
 	void chipSetted();
-	int getMenge();
+	int getZuege();
+	void resetZuege();
 }

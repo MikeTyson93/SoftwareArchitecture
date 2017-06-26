@@ -2,21 +2,16 @@ package de.htwg.se.ws1516.fourwinning.persistence.couchdb;
 import org.ektorp.support.CouchDbDocument;
 import org.ektorp.support.TypeDiscriminator;
 
-import de.htwg.se.ws1516.fourwinning.models.Player;
-
 public class PersistanceFeld extends CouchDbDocument {
-	
-	@TypeDiscriminator
-	public String id;
-	
+
+    @TypeDiscriminator
+    String id;
 	boolean isSet = false;
-    Player owner;
+    PersistancePlayer owner;
     private int x;
     private int y;
     
-    public PersistanceFeld(int x, int y){
-    	this.x = x;
-    	this.y = y;
+    public PersistanceFeld(){
     }
     
     public void setSet(boolean isSet){
@@ -27,20 +22,12 @@ public class PersistanceFeld extends CouchDbDocument {
     	return this.isSet;
     }
     
-    public void setOwner(Player owner){
+    public void setOwner(PersistancePlayer owner){
     	this.owner = owner;
     }
     
-    public Player getOwner(){
+    public PersistancePlayer getOwner(){
     	return this.owner;
-    }
-    
-    public void setId(String id){
-    	this.id = id;
-    }
-    
-    public String getId(){
-    	return this.id;
     }
     
     public void setX(int x){
@@ -57,5 +44,13 @@ public class PersistanceFeld extends CouchDbDocument {
     
     public int getY(){
     	return this.y;
-    }    
+    }
+
+    public String getId(){
+        return this.id;
+    }
+
+    public void setId(String id){
+        this.id = id;
+    }
 }

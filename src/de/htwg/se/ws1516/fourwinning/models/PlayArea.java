@@ -4,14 +4,21 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.htwg.se.ws1516.fourwinning.models.Feld;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.Map;
+import java.util.HashMap;
+
 
 public class PlayArea implements PlayAreaInterface
 {
     private Feld[][] feld;
     private int columns;
     private int rows;
-    String name;
-    List<Player> playerlist;
+    private String name;
+    private LinkedList<Player> playerlist;
+    private String id;
 
     //Konstruktor
     public PlayArea(int rows, int columns){
@@ -30,6 +37,7 @@ public class PlayArea implements PlayAreaInterface
         for(int i = 0; i < rows; i++){
             for (int j = 0; j<columns; j++){
                 feld[i][j] = new Feld(i,j,null);
+                feld[i][j].setSet(false);
             }
         }
     }
@@ -88,9 +96,43 @@ public class PlayArea implements PlayAreaInterface
 		return this.name;
 	}
 
-	@Override
+    @Override
+    public void clearFeld(){
+        buildArea(this.rows, this.columns);
+    }
+
+    @Override
+    public String toJson() {
+        String result = "";
+        try {
+            int rows = this.rows;
+            int columns = this.columns;
+            Map[][] mapMatrix = new HashMap[rows][columns];
+            for (int row = 0; row < rows; row++) {
+                for (int col = 0; col < columns; col++) {
+                    mapMatrix[row][col] = new HashMap();
+                    mapMatrix[row][col].put("feld", getIFeld(row, col));
+                }
+            }
+
+            Map<String, Object> map = new HashMap();
+            map.put("meta", this);
+            map.put("grid", mapMatrix);
+            ObjectMapper mapper = new ObjectMapper();
+
+            result = mapper.writeValueAsString(map);
+        }
+        catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+
+    @Override
 	public void setName(String name) {
-		this.name = name;
+        this.name = name;
 	}
 
 	@Override
@@ -109,10 +151,19 @@ public class PlayArea implements PlayAreaInterface
 	}
 	
 	@Override
-	public void setPlayers(Player one, Player two){
-		playerlist.add(one);
-		playerlist.add(two);
-	}
+	public void setPlayers(Player one, Player two) {
+        if (playerlist.contains(one)) {
+            playerlist.remove(playerlist.indexOf(one));
+            playerlist.add(one);
+        }
+        if (playerlist.contains(two)) {
+            playerlist.remove(playerlist.indexOf(two));
+            playerlist.add(two);
+        } else if (!playerlist.contains(one) && !playerlist.contains(two)) {
+            playerlist.add(one);
+            playerlist.add(two);
+        }
+    }
 	
 	@Override
 	public void clearPlayers(){
@@ -127,7 +178,24 @@ public class PlayArea implements PlayAreaInterface
 	}
 	
 	@Override
-	public List<Player> getPlayerList(){
+	public LinkedList<Player> getPlayerList(){
 		return playerlist;
 	}
+
+    @Override
+	public String getId(){
+	    return this.id;
+    }
+
+    @Override
+    public void setId(String id){
+	    this.id = id;
+    }
+
+    public Feld getFeld(int row, int column) {
+        return this.feld[row][column];
+    }
+
+    public FeldInterface getIFeld(int row, int column) { return getFeld(row, column); }
+
 }

@@ -1,4 +1,5 @@
 package de.htwg.se.ws1516.fourwinning.persistence.couchdb;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,23 +16,33 @@ public class PersistancePlayArea extends CouchDbDocument {
 	private static final long serialVersionUID = 1L;
 	
 	@TypeDiscriminator
-	public String id;
+	String id;
 	private PersistanceFeld[][] feld;
     private int columns;
     private int rows;
-    List<Player> playerlist;
-    String name;
-	
+    List<PersistancePlayer> players;
+	String name;
+
     public PersistancePlayArea(){
     }
     
     public void setFeld(PersistanceFeld[][] feld){
+
+    	rows = feld.length;
+    	columns = feld[0].length;
+		setClearFeld(rows,columns);
     	for (int i = 0; i < rows; i++){
 			for (int j = 0; j < columns; j++){
-				feld[i][j].setX(feld[i][j].getX());
-				feld[i][j].setY(feld[i][j].getY());
-				feld[i][j].setSet(feld[i][j].getSet());
-				feld[i][j].setOwner(feld[i][j].getOwner());
+				this.feld[i][j].setX(feld[i][j].getX());
+				this.feld[i][j].setY(feld[i][j].getY());
+				this.feld[i][j].setSet(feld[i][j].getSet());
+				PersistancePlayer owner = null;
+				if (feld[i][j].getOwner() != null) {
+					owner = new PersistancePlayer();
+					owner.setActive(feld[i][j].getOwner().getActive());
+					owner.setName(feld[i][j].getOwner().getName());
+				}
+				this.feld[i][j].setOwner(owner);
 			}
 		}
     }
@@ -56,12 +67,19 @@ public class PersistancePlayArea extends CouchDbDocument {
     	return this.rows;
     }
     
-    public void setPlayers(List<Player> playerlist){
-    	this.playerlist = playerlist;
+    public void setPlayers(LinkedList<Player> players){
+		this.players = new LinkedList<>();
+    	for (Player p : players){
+    		PersistancePlayer pp = new PersistancePlayer();
+    		pp.setName(p.getName());
+    		pp.setActive(p.getActive());
+    		pp.setZuege(p.getZuege());
+    		this.players.add(pp);
+		}
     }
     
-    public List<Player> getPlayers(){
-    	return this.playerlist;
+    public List<PersistancePlayer> getPlayers(){
+    	return this.players;
     }
 
     public void setName(String name){
@@ -71,18 +89,44 @@ public class PersistancePlayArea extends CouchDbDocument {
     public String getName(){
     	return this.name;
     }
-    
-    public void replacePlayArea(Feld[][] feldcopy, String name, int columns, int rows) {
+
+	public String getId(){
+		return this.id;
+	}
+
+	public void setId(String id){
+		this.id = id;
+	}
+
+    public void replacePlayArea(PersistanceFeld[][] feld, Feld[][] feldcopy, String name, int columns, int rows) {
 		for (int i = 0; i < rows; i++){
 			for (int j = 0; j < columns; j++){
 				feld[i][j].setX(feldcopy[i][j].getX());
 				feld[i][j].setY(feldcopy[i][j].getY());
 				feld[i][j].setSet(feldcopy[i][j].getSet());
-				feld[i][j].setOwner(feldcopy[i][j].getOwner());
+				PersistancePlayer owner = null;
+				if (feldcopy[i][j].getOwner() != null) {
+					owner = new PersistancePlayer();
+					owner.setActive(feldcopy[i][j].getOwner().getActive());
+					owner.setName(feldcopy[i][j].getOwner().getName());
+				}
+					feld[i][j].setOwner(owner);
 			}
 		}
 		this.name = name;
 		this.columns = columns;
 		this.rows = rows;
+	}
+
+	public void setClearFeld(int rows, int columns){
+		this.feld = new PersistanceFeld[rows][columns];
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < columns; j++) {
+				this.feld[i][j] = new PersistanceFeld();
+				this.feld[i][j].setOwner(null);
+				this.feld[i][j].setX(i);
+				this.feld[i][j].setY(j);
+			}
+		}
 	}
 }

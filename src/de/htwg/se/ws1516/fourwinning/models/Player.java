@@ -3,16 +3,16 @@ package de.htwg.se.ws1516.fourwinning.models;
 public class Player implements PlayerInterface
 {
     String name;
-    int menge;
+    int zuege;
     boolean active;
     boolean gewonnen = false;
-    String sessionName;
     
-    public Player(String name, int menge){
+    public Player(String name, int zuege){
         this.name = name;
-        this.menge = menge;
-        this.sessionName = "default";
+        this.zuege = 0;
     }
+
+    public Player(){}
     
     @Override
     public String getName(){
@@ -31,13 +31,13 @@ public class Player implements PlayerInterface
 
     @Override
     public void chipSetted(){
-        menge--;
+        zuege++;
     }
 
     @Override
-    public int getMenge(){
-        return menge;
+    public int getZuege(){
+        return zuege;
     }
 
-    
+    public void resetZuege() {this.zuege = 0; }
 }

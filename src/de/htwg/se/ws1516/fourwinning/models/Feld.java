@@ -13,7 +13,7 @@ public class Feld implements FeldInterface
         this.x = x;
         this.y = y;
     }
-    
+
     public int getX(){
     	return x;
     }

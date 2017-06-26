@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import de.htwg.se.ws1516.fourwinning.view.gui.*;
 import de.htwg.se.ws1516.fourwinning.view.tui.*;
+import de.htwg.se.ws1516.fourwinning.view.ConnectFourService;
 import de.htwg.se.ws1516.fourwinning.controller.IGameController;
 import de.htwg.se.ws1516.fourwinning.models.Player;
 
@@ -16,7 +17,7 @@ public class FourWinning {
 	private static final Logger LOGGER = Logger.getLogger(Tui.class.getName());
 	private Tui textUI;
 	private Gui graphicUI;
-	protected IGameController controller;
+	static protected IGameController controller;
 	private static FourWinning instance;
 	int rows;
 	int columns;
@@ -33,7 +34,12 @@ public class FourWinning {
 		textUI.createGameArea();
 		textUI.createPlayers();
 		graphicUI.createPlayers();
-		instance = null;
+		ConnectFourService microservice = new ConnectFourService(controller);
+		//instance = null;
+	}
+
+	public static IGameController getController(){
+		return controller;
 	}
 
 	public static FourWinning getInstance() throws IOException {

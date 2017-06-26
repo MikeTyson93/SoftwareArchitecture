@@ -51,15 +51,15 @@ public class PlayerTest {
 
 	@Test
 	public void testChipSetted() {
-		p.menge = 10;
+		p.zuege = 10;
 		p.chipSetted();
-		assertEquals(9,p.menge);
+		assertEquals(9,p.zuege);
 	}
 
 	@Test
 	public void testGetMenge() {
-		p.menge = 10;
-		assertEquals(10,p.getMenge());
+		p.zuege = 10;
+		assertEquals(10,p.getZuege());
 	}
 
 }
