@@ -87,7 +87,7 @@ public class PlayAreaHibernateDAO implements PlayAreaInterfaceDAO {
     }
 
     public Player changeToGameModel(PersistencePlayer player){
-        return new Player(player.getName(), player.getMenge());
+        return new Player(player.getName(), player.getZuege());
     }
 
     @Override

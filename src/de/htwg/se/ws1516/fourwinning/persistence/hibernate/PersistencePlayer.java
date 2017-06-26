@@ -29,8 +29,8 @@ public class PersistencePlayer implements PlayerInterface {
     @Column(name = "name")
     String name;
 
-    @Column(name= "menge")
-    int menge;
+    @Column(name= "zuege")
+    int zuege;
 
     @Column(name = "active")
     boolean active;
@@ -41,14 +41,14 @@ public class PersistencePlayer implements PlayerInterface {
     @Column(name = "sessionName")
     String sessionName;
 
-    public PersistencePlayer(String name, int menge){
+    public PersistencePlayer(String name, int zuege){
         this.name = name;
-        this.menge = menge;
+        this.zuege = zuege;
         this.sessionName = "default";
     }
     public PersistencePlayer(Player player){
         this.name = player.getName() ;
-        this.menge = player.getMenge();
+        this.zuege = player.getZuege();
         this.sessionName = "default";
     }
     public PersistencePlayer(){
@@ -67,10 +67,12 @@ public class PersistencePlayer implements PlayerInterface {
     }
 
     public void chipSetted(){
-        menge--;
+        zuege++;
     }
 
-    public int getMenge(){
-        return menge;
+    public int getZuege(){
+        return zuege;
     }
+
+    public void resetZuege() { this.zuege = 0; }
 }

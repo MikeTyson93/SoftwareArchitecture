@@ -20,7 +20,7 @@ public class PersistenceFeld {
     String owner;
 
     @Column
-    int menge;
+    int zuege;
 
     @Column(name = "xValue")
     private int x;
@@ -38,7 +38,7 @@ public class PersistenceFeld {
 
     public PersistenceFeld(int x, int y, PersistencePlayer owner){
         this.owner = owner.getName();
-        this.menge = owner.getMenge();
+        this.zuege = owner.getZuege();
         this.x = x;
         this.y = y;
     }
@@ -47,7 +47,7 @@ public class PersistenceFeld {
         this.x = feld.getX();
         this.y = feld.getY();
         this.owner = feld.getOwner().getName();
-        this.menge = feld.getOwner().getMenge();
+        this.zuege = feld.getOwner().getZuege();
     }
 
     public void setSet(boolean isSet){
@@ -60,16 +60,16 @@ public class PersistenceFeld {
 
     public void setOwner(PersistencePlayer owner){
         this.owner = owner.getName();
-        this.menge = owner.getMenge();
+        this.zuege = owner.getZuege();
     }
 
     public PersistencePlayer getOwner(){
-        return new PersistencePlayer(this.owner, this.menge);
+        return new PersistencePlayer(this.owner, this.zuege);
     }
 
     public Player getOwnerAsGameModel(){
         if(this.owner != null) {
-            return new Player(this.owner, this.menge);
+            return new Player(this.owner, this.zuege);
         }
         else{
             return null;
