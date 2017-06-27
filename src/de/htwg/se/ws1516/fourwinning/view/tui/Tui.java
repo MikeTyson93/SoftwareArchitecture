@@ -156,7 +156,7 @@ public class Tui implements IObserver {
 			return "show";
 		}
 		
-		spiel.notifyObservers();
+		//spiel.notifyObservers();
 		String whoHasWon = "";
 		if (spiel.spielGewonnen(spielfeld, aktiv)) {
 			
