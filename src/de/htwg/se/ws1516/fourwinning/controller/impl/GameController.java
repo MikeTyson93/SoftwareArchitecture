@@ -143,6 +143,8 @@ public class GameController extends Observable implements IGameController {
 			return "Zug fehlgeschlagen";
 		}
 		currentRow = statuszug;
+		Player temp = changePlayer(this.one, this.two);
+		notifyObservers(new PlayerChangeEvent());
 		notifyObservers();
 		
 		return "Zug erfolgreich";

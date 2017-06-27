@@ -5,14 +5,12 @@ import de.htwg.se.ws1516.fourwinning.controller.IGameController;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import de.htwg.se.ws1516.fourwinning.controller.impl.GameDrawEvent;
-import de.htwg.se.ws1516.fourwinning.controller.impl.GameLoadEvent;
-import de.htwg.se.ws1516.fourwinning.controller.impl.GameOverEvent;
+
+import de.htwg.se.ws1516.fourwinning.controller.impl.*;
 import de.htwg.se.ws1516.fourwinning.models.Feld;
 import de.htwg.se.ws1516.fourwinning.models.Player;
 import de.htwg.util.observer.Event;
 import de.htwg.util.observer.IObserver;
-import de.htwg.se.ws1516.fourwinning.controller.impl.NewGameEvent;
 import de.htwg.se.ws1516.fourwinning.view.gui.SavegamePanel;
 
 import javax.swing.*;
@@ -245,7 +243,7 @@ public class Gui extends JFrame implements ActionListener, IObserver {
 					}
 				}
 				
-				spiel.changePlayer(eins, zwei);
+				//spiel.changePlayer(eins, zwei);
 				lSpieler.setText(spiel.aktiverSpieler().getName() + " ist am Zug!");
 
 			}
@@ -258,6 +256,8 @@ public class Gui extends JFrame implements ActionListener, IObserver {
 	public void update(Event e) {
 		if(e == null){
 			ausgabe(rows, columns, eins, zwei);
+			this.aktiv = spiel.aktiverSpieler();
+		} else if (e instanceof PlayerChangeEvent){
 			this.aktiv = spiel.aktiverSpieler();
 		} else if (e instanceof GameOverEvent){
 			String gameOver = String.format("%n%s hat das Spiel gewonnen!%n", aktiv.getName());

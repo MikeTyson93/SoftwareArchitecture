@@ -13,16 +13,22 @@ import akka.stream.ActorMaterializer;
 import akka.stream.Materializer;
 import akka.stream.javadsl.Sink;
 import akka.stream.javadsl.Source;
-
+import java.util.regex.*;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
 import akka.util.ByteString;
+import de.htwg.se.ws1516.fourwinning.controller.impl.PlayerChangeEvent;
 import de.htwg.se.ws1516.fourwinning.models.*;
 import de.htwg.se.ws1516.fourwinning.controller.IGameController;
 public class ConnectFourService{
+    String pat = "^/[0-6]{1}";
+    Pattern p = Pattern.compile(pat);//. represents single character
+    //Matcher m = p.matcher("as");
+    //boolean b = m.matches();
+
     IGameController spiel;
     final Function<HttpRequest, HttpResponse> requestHandler;
     Source<IncomingConnection, CompletionStage<ServerBinding>> serverSource;
@@ -47,6 +53,9 @@ public class ConnectFourService{
                     public HttpResponse apply(HttpRequest request) throws Exception {
                         Uri uri = request.getUri();
                         if (request.method() == HttpMethods.GET) {
+                            String path = uri.path();
+                            Matcher m = p.matcher(path);
+                            boolean match = m.matches();
                             if (uri.path().equals("/"))
                                 return
                                         HttpResponse.create()
@@ -60,43 +69,22 @@ public class ConnectFourService{
                                                 .withEntity("Hello " + name + "!");
                             } else if (uri.path().equals("/show")) {
 
-                                Feld[][] feld = spiel.update();
-                                int rows = spiel.getRows();
-                                int columns = spiel.getColumns();
-                                Player eins = spiel.getPlayerOne();
-                                Player zwei = spiel.getPlayerTwo();
-                                StringBuilder sb = new StringBuilder();
-                                String NEWLINE = System.getProperty("line.separator");
-                                sb.append(NEWLINE);
-                                for (int k = 0; k < rows; k++) {
-                                    for (int l = 0; l < columns; l++) {
-                                        if (feld[k][l].getSet()) {
-                                            if (feld[k][l].getOwner().getName().equals(eins.getName())) {
-                                                sb.append("[X]\t");
-
-                                            } else if (feld[k][l].getOwner().getName().equals(zwei.getName())) {
-                                                sb.append("[O]\t");
-
-                                            }
-                                        } else {
-                                            sb.append("[ ]\t");
-
-                                        }
-                                    }
-                                    sb.append(NEWLINE);
-                                }
-                                String ausgabe = sb.toString();
-                                String result = ausgabe.replace(NEWLINE, "<br>");
-                                result = result.replace("%n", "<br>");
-                                result = result.replace("     ", " &nbsp; &nbsp; ");
-                                result = result.replace("   ", " &nbsp; ");
                                 return HttpResponse.create()
                                         .withEntity(ContentTypes.TEXT_HTML_UTF8,
-                                                "<html><body>"+result+"</body></html>");
+                                                "<html><body>"+ausgabe()+"</body></html>");
                             }
-                            else if (uri.path().equals("/ping"))
-                                return HttpResponse.create().withEntity("PONG!");
-                            else
+                            else if (match) {
+                                String col = path.substring(1);
+                                int currentColumn = Integer.parseInt(col);
+                                Player aktiv = spiel.aktiverSpieler();
+                                String success = spiel.zug(currentColumn, aktiv);
+                                if (success.equals("Zug fehlgeschlagen"))
+                                    return HttpResponse.create().withEntity(success);
+                                // print gamearea
+                                return HttpResponse.create()
+                                        .withEntity(ContentTypes.TEXT_HTML_UTF8,
+                                                "<html><body>"+ausgabe()+"</body></html>");
+                            } else
                                 return NOT_FOUND;
                         }
                         return NOT_FOUND;
@@ -110,5 +98,39 @@ public class ConnectFourService{
 
                     connection.handleWithSyncHandler(requestHandler, materializer);
                 })).run(materializer);
+    }
+
+    String ausgabe(){
+        Feld[][] feld = spiel.update();
+        int rows = spiel.getRows();
+        int columns = spiel.getColumns();
+        Player eins = spiel.getPlayerOne();
+        Player zwei = spiel.getPlayerTwo();
+        StringBuilder sb = new StringBuilder();
+        String NEWLINE = System.getProperty("line.separator");
+        sb.append(NEWLINE);
+        for (int k = 0; k < rows; k++) {
+            for (int l = 0; l < columns; l++) {
+                if (feld[k][l].getSet()) {
+                    if (feld[k][l].getOwner().getName().equals(eins.getName())) {
+                        sb.append("[X]\t");
+
+                    } else if (feld[k][l].getOwner().getName().equals(zwei.getName())) {
+                        sb.append("[O]\t");
+
+                    }
+                } else {
+                    sb.append("[ ]\t");
+
+                }
+            }
+            sb.append(NEWLINE);
+        }
+        String ausgabe = sb.toString();
+        String result = ausgabe.replace(NEWLINE, "<br>");
+        result = result.replace("%n", "<br>");
+        result = result.replace("     ", " &nbsp; &nbsp; ");
+        result = result.replace("   ", " &nbsp; ");
+        return result;
     }
 }

@@ -99,7 +99,7 @@ public class Tui implements IObserver {
 		}
 		if ("redo".equals(currentColumnString)) {
 			spiel.redo();
-			spielerwaechsel(eins, zwei);
+			//spielerwaechsel(eins, zwei);
 		} else if (currentColumnString.startsWith("load")){
 			// Load savegame
 			LOGGER.info("Nun m�ssen sie noch den Namen des Spielstandes eingeben, welchen Sie laden wollen.");
@@ -198,7 +198,7 @@ public class Tui implements IObserver {
 			spiel.getState().nextState(spiel);
 			String rueck = playGame("");
 			if (rueck == next)
-				spielerwaechsel(eins, zwei);
+				this.aktiv = spiel.aktiverSpieler();
 			if (rueck == next || rueck == "show" || rueck == "load" || rueck == "save" || rueck == "delete")
 				return next;
 		} else if (spiel.getState() instanceof PlayerChangeState) {
@@ -218,7 +218,7 @@ public class Tui implements IObserver {
         if(spiel.getState() instanceof GameRunningState)
         {
 			String rueck = playGame(command);
-			spielerwaechsel(eins, zwei);
+			//spielerwaechsel(eins, zwei);
 			return rueck;
 
 		}
@@ -241,7 +241,9 @@ public class Tui implements IObserver {
 		} else if (e instanceof GameLoadEvent){
 			this.spielfeld = spiel.update();
 			ausgabe(spielfeld, rows, columns, eins, zwei);
-		}
+		} else if (e instanceof PlayerChangeEvent){
+		    this.aktiv = spiel.aktiverSpieler();
+        }
 	}
 	
 	public String toHtml()
