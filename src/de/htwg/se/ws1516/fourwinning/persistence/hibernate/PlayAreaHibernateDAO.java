@@ -38,8 +38,6 @@ public class PlayAreaHibernateDAO implements PlayAreaInterfaceDAO {
         }catch(HibernateException e){
             if(tx!=null) tx.rollback();
             e.printStackTrace();
-        }finally{
-            session.close();
         }
     }
 
