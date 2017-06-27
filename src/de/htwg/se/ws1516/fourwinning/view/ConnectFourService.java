@@ -24,8 +24,8 @@ import de.htwg.se.ws1516.fourwinning.controller.impl.PlayerChangeEvent;
 import de.htwg.se.ws1516.fourwinning.models.*;
 import de.htwg.se.ws1516.fourwinning.controller.IGameController;
 public class ConnectFourService{
-    String pat = "^/[0-6]{1}";
-    Pattern p = Pattern.compile(pat);//. represents single character
+    String pat = "^/[0-6]{1}"; // Set a chip
+    Pattern p = Pattern.compile(pat);
     //Matcher m = p.matcher("as");
     //boolean b = m.matches();
 

@@ -99,7 +99,6 @@ public class PlayAreaHibernateDAO implements PlayAreaInterfaceDAO {
     public boolean deletePlayArea(String name) {
         ActorRef actor = system.actorOf(Props.create(Actor.class));
         actor.tell("Testing actor", null);
-        int id = getIDbyName(name);
         if (!containsPlayAreaByName(name)) {
             return false;
         }
@@ -107,7 +106,7 @@ public class PlayAreaHibernateDAO implements PlayAreaInterfaceDAO {
         Transaction tx = session.beginTransaction();
         try{
 
-            PersistencePlayArea area = (PersistencePlayArea) session.get(PersistencePlayArea.class, id);
+            PersistencePlayArea area = (PersistencePlayArea) session.get(PersistencePlayArea.class, name);
             session.delete(area);
             tx.commit();
         } catch (Exception e) {
@@ -138,29 +137,5 @@ public class PlayAreaHibernateDAO implements PlayAreaInterfaceDAO {
             }
         }
         return null;
-    }
-
-    public int getIDbyName(String name){
-        Session session = HibernateUtil.getInstance().getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        List<PersistencePlayArea> areas = new LinkedList<PersistencePlayArea>();
-        int id;
-        try{
-            //areas = session.createCriteria("PersistencePlayer.class").list();
-            areas = session.createQuery("from PersistencePlayArea").list();
-        }catch(HibernateException e) {
-            tx.rollback();
-            e.printStackTrace();
-        }finally{
-            session.close();
-        }
-        if(!areas.isEmpty()) {
-            for (PersistencePlayArea area : areas) {
-                if (area.getName().equals(name)) {
-                    return area.getID();
-                }
-            }
-        }
-        return 0;
     }
 }

@@ -12,18 +12,13 @@ import java.util.List;
 @Entity
 @Table(name = "PlayArea")
 public class PersistencePlayArea {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "area_ID")
-    public int id;
-
     @Column(name = "columns")
     private int columns;
 
     @Column(name = "rows")
     private int rows;
 
+    @Id
     @Column(name = "name")
     private String name;
 
@@ -122,8 +117,8 @@ public class PersistencePlayArea {
 
     }
 
-    public int getID(){
-        return this.id;
+    public String getID(){
+        return this.name;
     }
 
     public List<PersistencePlayer> getPlayerList(){
