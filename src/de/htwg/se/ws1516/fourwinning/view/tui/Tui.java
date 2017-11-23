@@ -63,9 +63,7 @@ public class Tui implements IObserver {
 	}
 
 	public void createGameArea() {
-		LOGGER.info("Rows werden von GUI �bernommen");
 		rows = spiel.getRows();
-		LOGGER.info("Columns werden von GUI �bernommen");
 		columns = spiel.getColumns();
 		LOGGER.info(spiel.getStatusText());
 	}
@@ -180,7 +178,7 @@ public class Tui implements IObserver {
 				return next;
 			}
 		}*/
-		spiel.notifyObservers(new PlayerChangeEvent());
+		//spiel.notifyObservers(new PlayerChangeEvent());
 		return next;
 	}
 

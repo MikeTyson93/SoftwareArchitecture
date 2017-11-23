@@ -7,16 +7,16 @@ import java.util.logging.Level;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import de.htwg.se.ws1516.fourwinning.view.gui.*;
+//import de.htwg.se.ws1516.fourwinning.view.gui.*;
 import de.htwg.se.ws1516.fourwinning.view.tui.*;
-import de.htwg.se.ws1516.fourwinning.view.ConnectFourService;
+//import de.htwg.se.ws1516.fourwinning.view.ConnectFourService;
 import de.htwg.se.ws1516.fourwinning.controller.IGameController;
 import de.htwg.se.ws1516.fourwinning.models.Player;
 
 public class FourWinning {
 	private static final Logger LOGGER = Logger.getLogger(Tui.class.getName());
 	private Tui textUI;
-	private Gui graphicUI;
+	//private Gui graphicUI;
 	static protected IGameController controller;
 	private static FourWinning instance;
 	int rows;
@@ -27,14 +27,14 @@ public class FourWinning {
 		controller = injector.getInstance(IGameController.class);
 		
 		textUI = new Tui(controller);
-		graphicUI = new Gui(controller);
+		//graphicUI = new Gui(controller);
 		buildGameArea();
 		buildPlayers();
-		graphicUI.createGameArea();
+		//graphicUI.createGameArea();
 		textUI.createGameArea();
 		textUI.createPlayers();
-		graphicUI.createPlayers();
-		ConnectFourService microservice = new ConnectFourService(controller);
+		//graphicUI.createPlayers();
+		//ConnectFourService microservice = new ConnectFourService(controller);
 		//instance = null;
 	}
 
@@ -60,8 +60,8 @@ public class FourWinning {
 	}
 
 	public void buildPlayers(){
-		String one = "Michael";
-		String two = "Stephan";
+		String one = "Spieler 1";
+		String two = "Spieler 2";
 		controller.createPlayers(one, two);
 		Player eins = controller.getPlayerOne();
 		Player zwei = controller.getPlayerTwo();

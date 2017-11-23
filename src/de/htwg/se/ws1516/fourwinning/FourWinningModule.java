@@ -14,11 +14,11 @@ public class FourWinningModule extends AbstractModule{
 	        bind(IGameController.class).to(
 	                de.htwg.se.ws1516.fourwinning.controller.impl.GameController.class);
 
-	        //bind(PlayAreaInterfaceDAO.class).to(
-	        //		de.htwg.se.ws1516.fourwinning.persistence.db4o.PlayAreaDb4oDAO.class);
+	        bind(PlayAreaInterfaceDAO.class).to(
+	        		de.htwg.se.ws1516.fourwinning.persistence.db4o.PlayAreaDb4oDAO.class);
 	        //bind(PlayAreaInterfaceDAO.class).to(
 	        //		de.htwg.se.ws1516.fourwinning.persistence.couchdb.PlayAreaCouchDBDAO.class);
-	        bind(PlayAreaInterfaceDAO.class).to(
-	        		de.htwg.se.ws1516.fourwinning.persistence.hibernate.PlayAreaHibernateDAO.class);
+	        //bind(PlayAreaInterfaceDAO.class).to(
+	        //		de.htwg.se.ws1516.fourwinning.persistence.hibernate.PlayAreaHibernateDAO.class);
 	 }
 }

@@ -76,6 +76,28 @@ public class GameController extends Observable implements IGameController {
 		statusText = "Players created";
 	}
 
+	@Override
+	public void createPlayerOne(String nameOne){
+		state = new PlayerBuildState();
+		one = new Player(nameOne, mengeOne);
+		status = GameStates.CREATE_PLAYERS;
+		statusText = "Player one created";
+	}
+
+	@Override
+	public void createPlayerTwo(String nameTwo){
+		state = new PlayerBuildState();
+		two = new Player(nameTwo, mengeTwo);
+		status = GameStates.CREATE_PLAYERS;
+		statusText = "Player two created";
+	}
+
+	@Override
+	public boolean allPlayersCreated(){
+		return (one != null && two != null);
+	}
+
+
 	/*
 	 * liefert momentan aktiven Spieler zurueck
 	 */
