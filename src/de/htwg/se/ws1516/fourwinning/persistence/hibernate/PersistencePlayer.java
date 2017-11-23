@@ -58,6 +58,8 @@ public class PersistencePlayer implements PlayerInterface {
         return name;
     }
 
+    public void setName(String name) { this.name = name; }
+
     public void setActive(boolean zustand){
         active = zustand;
     }
@@ -75,4 +77,8 @@ public class PersistencePlayer implements PlayerInterface {
     }
 
     public void resetZuege() { this.zuege = 0; }
+
+    public int getIdentification() {
+        return this.id;
+    }
 }

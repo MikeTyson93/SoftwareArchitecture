@@ -69,7 +69,7 @@ public class PersistenceFeld {
 
     public Player getOwnerAsGameModel(){
         if(this.owner != null) {
-            return new Player(this.owner, this.zuege);
+            return new Player(this.owner, this.zuege, this.id);
         }
         else{
             return null;

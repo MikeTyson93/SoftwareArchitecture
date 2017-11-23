@@ -100,10 +100,10 @@ public class PlayAreaCouchDBDAO implements PlayAreaInterfaceDAO{
 		int idx = 0;
 		for (PersistancePlayer pp : playerlist){
 			if (idx == 0) {
-				one = new Player(pp.getName(), 21);
+				one = new Player(pp.getName(), 21, pp.getIdentification());
 				one.setActive(pp.getActive());
 			} else {
-				two = new Player(pp.getName(), 21);
+				two = new Player(pp.getName(), 21, pp.getIdentification());
 				two.setActive(pp.getActive());
 			}
 			idx++;
@@ -126,8 +126,9 @@ public class PlayAreaCouchDBDAO implements PlayAreaInterfaceDAO{
 				if (areaOfDb[i][j].getOwner() != null) {
 					String playerName = areaOfDb[i][j].getOwner().getName();
 					int zuege = areaOfDb[i][j].getOwner().getZuege();
+					int id = areaOfDb[i][j].getOwner().getIdentification();
 					boolean isActive = areaOfDb[i][j].getOwner().getActive();
-					owner = new Player(playerName, zuege);
+					owner = new Player(playerName, zuege, id);
 					owner.setActive(isActive);
 					areaOfGame[i][j].setOwner(owner);
 				}

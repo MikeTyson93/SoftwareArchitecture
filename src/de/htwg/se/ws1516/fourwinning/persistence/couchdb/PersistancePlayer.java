@@ -4,7 +4,7 @@ import org.ektorp.support.TypeDiscriminator;
 
 public class PersistancePlayer extends CouchDbDocument{
     @TypeDiscriminator
-    String id;
+    int id;
     String name;
     int zuege;
     boolean active;
@@ -48,5 +48,8 @@ public class PersistancePlayer extends CouchDbDocument{
         return this.name;
     }
 
+    public int getIdentification() {
+        return this.id;
+    }
 }
 

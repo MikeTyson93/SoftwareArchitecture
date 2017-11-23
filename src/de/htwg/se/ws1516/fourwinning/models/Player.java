@@ -6,10 +6,12 @@ public class Player implements PlayerInterface
     int zuege;
     boolean active;
     boolean gewonnen = false;
-    
-    public Player(String name, int zuege){
+    private int id;
+
+    public Player(String name, int zuege, int id){
         this.name = name;
         this.zuege = 0;
+        this.id = id;
     }
 
     public Player(){}
@@ -17,6 +19,11 @@ public class Player implements PlayerInterface
     @Override
     public String getName(){
         return name;
+    }
+
+    @Override
+    public void setName(String name){
+        this.name = name;
     }
 
     @Override
@@ -40,4 +47,9 @@ public class Player implements PlayerInterface
     }
 
     public void resetZuege() {this.zuege = 0; }
+
+    @Override
+    public int getIdentification(){
+        return this.id;
+    }
 }

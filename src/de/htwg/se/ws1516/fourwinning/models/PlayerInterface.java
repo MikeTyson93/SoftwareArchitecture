@@ -7,4 +7,6 @@ public interface PlayerInterface {
 	void chipSetted();
 	int getZuege();
 	void resetZuege();
+	void setName(String name);
+	int getIdentification();
 }

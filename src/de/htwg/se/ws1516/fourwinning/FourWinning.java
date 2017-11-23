@@ -60,8 +60,8 @@ public class FourWinning {
 	}
 
 	public void buildPlayers(){
-		String one = "Spieler 1";
-		String two = "Spieler 2";
+		String one = "NameSpieler1";
+		String two = "NameSpieler2";
 		controller.createPlayers(one, two);
 		Player eins = controller.getPlayerOne();
 		Player zwei = controller.getPlayerTwo();

@@ -68,8 +68,8 @@ public class GameController extends Observable implements IGameController {
 	public void createPlayers(String nameOne, String nameTwo) {
 		commands = new CreateCommand();
 		state = new PlayerBuildState();
-		one = new Player(nameOne, mengeOne);
-		two = new Player(nameTwo, mengeTwo);
+		one = new Player(nameOne, mengeOne, 1);
+		two = new Player(nameTwo, mengeTwo, 2);
 		one.setActive(true);
 		two.setActive(false);
 		status = GameStates.CREATE_PLAYERS;
@@ -79,7 +79,7 @@ public class GameController extends Observable implements IGameController {
 	@Override
 	public void createPlayerOne(String nameOne){
 		state = new PlayerBuildState();
-		one = new Player(nameOne, mengeOne);
+		one = new Player(nameOne, mengeOne, 1);
 		status = GameStates.CREATE_PLAYERS;
 		statusText = "Player one created";
 	}
@@ -87,7 +87,7 @@ public class GameController extends Observable implements IGameController {
 	@Override
 	public void createPlayerTwo(String nameTwo){
 		state = new PlayerBuildState();
-		two = new Player(nameTwo, mengeTwo);
+		two = new Player(nameTwo, mengeTwo, 2);
 		status = GameStates.CREATE_PLAYERS;
 		statusText = "Player two created";
 	}
@@ -142,14 +142,12 @@ public class GameController extends Observable implements IGameController {
 		if (one.getActive()) {
 			one.setActive(false);
 			two.setActive(true);
-			
 			return two;
         }
         one.setActive(true);
         two.setActive(false);
   
 		return one;
-		
 		}
 
 	/*
